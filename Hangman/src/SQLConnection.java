@@ -1,0 +1,36 @@
+import java.sql.*;
+
+public class SQLConnection {
+    public static void test() {
+        Connection connection = null;
+        try {
+            connection = DriverManager.getConnection("jdbc:sqlite:base.db");
+            Statement statement = connection.createStatement();
+            statement.setQueryTimeout(30);
+
+            statement.executeUpdate("DROP TABLE IF EXISTS terminalroot");
+            statement.executeUpdate("CREATE TABLE terminalroot (id INTEGER, name STRING");
+            statement.executeUpdate("INSERT INTO terminalroot VALUES(1,'Test 1')");
+            statement.executeUpdate("INSERT INTO terminalroot VALUES(2,'Test 2')");
+            ResultSet rs = statement.executeQuery("SELECT * FROM terminalroot");
+            while(rs.next()){
+                System.out.println("Name: " + rs.getString("name"));
+                System.out.println("ID: " + rs.getString("id"));
+            }
+        }
+        catch (SQLException e){
+            System.err.println(e.getMessage());
+        }
+
+        finally {
+            try {
+                if (connection != null){
+                    connection.close();
+                }
+            }
+            catch (SQLException e){
+                System.err.println(e.getMessage());
+            }
+        }
+    }
+}
