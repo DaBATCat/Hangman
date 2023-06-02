@@ -4,6 +4,15 @@ import java.sql.*;
 
 public class SQLConnection {
     public static void main(String[] args) throws ClassNotFoundException, SQLException {
+        //String url = "jdbc:mysql://localhost:3306/hangman";
+        //String username = "root";
+        //String password = "root8";
+        //try{
+        //    Connection connection = DriverManager.getConnection(url, username, password);
+        //}
+        //catch (SQLException e){
+        //    e.printStackTrace();
+        //}
         String url = "jdbc:mysql://localhost:3306/hangman";
         String username = "root";
         String password = "root8";
