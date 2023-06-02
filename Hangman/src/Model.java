@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Random;
@@ -13,8 +14,8 @@ private int fails=0;
     public Model() {
         initWords();
     }
-    
-    
+
+
     //beispielwörter
     private void initWords(){
         woerter.add("Toast");
@@ -29,7 +30,11 @@ private int fails=0;
         woerter.add("Frosch");
         woerter.add("Bett");
     }
-    
+
+    public void setFails(int fails) {
+        this.fails = fails;
+    }
+
     //Wort eingabe Methode
     public String inputWort(){
         Scanner scanner = new Scanner(System.in);
@@ -53,6 +58,28 @@ public boolean WortCheck(String dasWort, String siegwort){
         return true;
     }
     else return false;
+
+}
+
+
+
+public void nochmalSpielen(){
+    Scanner scanner = new Scanner(System.in);
+    String input="";
+    System.out.println("möchtest du nochmal spielen? (J/N)");
+    input=scanner.nextLine();
+    if (input.equalsIgnoreCase("j")||input.equalsIgnoreCase("ja")){
+        firstEzGame();
+
+    }
+    else if (input.equalsIgnoreCase("n")||input.equalsIgnoreCase("nein")){
+        System.out.println("Ok Tschüss");
+        return;
+    }
+    else{
+        System.out.println("DAS STAND NICHT ZUR VERFÜGUNG!");
+        nochmalSpielen();
+    }
 
 }
 
@@ -84,10 +111,18 @@ public ArrayList<Integer> Buchstabencheck(String derBuchstabe, String siegwortt)
 public void Victory(){
     System.out.println("Du hast gewonnen!");
     System.out.println("Das Wort ist: "+siegwort);
+    nochmalSpielen();
+}
+
+public void fail(){
+    System.out.println("DU HAST VERLOREN!!!");
+    System.out.println("Das wort war: "+siegwort);
+    nochmalSpielen();
 }
 
 //spiel
 public void firstEzGame(){
+        setFails(0);
     Random rand = new Random();
     int nr=rand.nextInt(woerter.size()-1);
     ArrayList<String> tempWord=new ArrayList<>();
@@ -140,8 +175,8 @@ public void firstEzGame(){
 
 
         }
-    System.out.println("DU HAST VERLOREN!!!");
-    System.out.println("Das wort war: "+siegwort);
+    fail();
+
 }
 
 
