@@ -56,7 +56,7 @@ public class SQLiteConnection {
 
   private static void printtln(String defaultText) {
     LocalDateTime localDateTime = LocalDateTime.now();
-    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
     String formattedDate = localDateTime.format(dateTimeFormatter);
     System.out.println("[" + formattedDate + "] " + defaultText);
   }
