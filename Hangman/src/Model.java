@@ -1,3 +1,5 @@
+package org.app.utils;
+
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.Locale;
