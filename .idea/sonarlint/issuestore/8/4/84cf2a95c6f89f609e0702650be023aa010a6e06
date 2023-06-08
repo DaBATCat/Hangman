@@ -1,0 +1,44 @@
+
+o
+java:S2293"YReplace the type specification in this constructor call with the diamond operator ("<>").(ìÂÈÇ
+†
+java:S1319Z"pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(¬¶¸‡
+¡
+java:S1598"…This file "Model.java" should be located in "org\app\utils" directory, not in "E:\Users\Daniel\Documents\GitHub\Hangman\Hangman\src".(‹ãïÕüÿÿÿÿ
+7
+java:S1170	"!Make this final field static too.(Åäš
+N	java:S106/"9Replace this use of System.out or System.err by a logger.(Ëí¶ù
+N	java:S1063"9Replace this use of System.out or System.err by a logger.(×ÆúË
+h	java:S1009"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(–ŸÌ¥ùÿÿÿÿ
+\
+java:S1126;"AReplace this if-then-else statement by a single return statement.(¨œ†ÿùÿÿÿÿ
+1
+java:S3626O"Remove this redundant jump.(ûÁİ…
+S	java:S106G"9Replace this use of System.out or System.err by a logger.(ªñÃ®şÿÿÿÿ
+N	java:S106N"9Replace this use of System.out or System.err by a logger.(ôÎØ
+N	java:S106R"9Replace this use of System.out or System.err by a logger.(”ûÙÛ
+c	java:S100Z"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¬¶¸‡
+c	java:S100q"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÖÖ¼ç
+N	java:S106r"9Replace this use of System.out or System.err by a logger.(æšß
+S	java:S106s"9Replace this use of System.out or System.err by a logger.(øñ¬®ÿÿÿÿÿ
+N	java:S106x"9Replace this use of System.out or System.err by a logger.(ÊˆŞ•
+N	java:S106y"9Replace this use of System.out or System.err by a logger.(èùû¢
+m
+java:S3776~"RRefactor this method to reduce its Cognitive Complexity from 23 to the 15 allowed.(³÷ß¸øÿÿÿÿ
+X
+java:S1854¤"ARemove this useless assignment to local variable "buchstabenPos".(ÀĞÆ“
+:
+java:S2119€"Save and re-use this "Random".(šŸ«íøÿÿÿÿ
+N	java:S106†"9Replace this use of System.out or System.err by a logger.(€Í´
+T	java:S106"9Replace this use of System.out or System.err by a logger.(ùì×ºüÿÿÿÿ
+T	java:S106“"9Replace this use of System.out or System.err by a logger.(£·Í¼şÿÿÿÿ
+T	java:S106Ÿ"9Replace this use of System.out or System.err by a logger.(ÅÕö­øÿÿÿÿ
+T	java:S106§"9Replace this use of System.out or System.err by a logger.(µ¥üßşÿÿÿÿ
+T	java:S106®"9Replace this use of System.out or System.err by a logger.(œ‰«•üÿÿÿÿ
+O	java:S106½"9Replace this use of System.out or System.err by a logger.(Š†Ï«
+O	java:S106Ã"9Replace this use of System.out or System.err by a logger.(›ñˆ«
+O	java:S106Ä"9Replace this use of System.out or System.err by a logger.(«óß’
+C
+java:S1128"(Remove this unused import 'javax.swing'.(Ìí¿Üüÿÿÿÿ
+H
+java:S1128"-Remove this unused import 'java.util.Locale'.(åğ×±ûÿÿÿÿ

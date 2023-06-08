@@ -1,0 +1,23 @@
+
+³
+java:S1598"This file "SQLiteConnection.java" should be located in "org\app\utils" directory, not in "E:\Users\Daniel\Documents\GitHub\Hangman\Hangman\src".(‹ãïÕüÿÿÿÿ8ƒ«ßÚ‰1
+i
+java:S2095$"GUse try-with-resources or close this "Statement" in a "finally" clause.(é°Áµşÿÿÿÿ8ª«ßÚ‰1
+i
+java:S20950"GUse try-with-resources or close this "Statement" in a "finally" clause.(é°Áµşÿÿÿÿ8ª«ßÚ‰1
+]	java:S125"<This block of commented-out lines of code should be removed.(ÿ¡­„øÿÿÿÿ8²«ßÚ‰1
+X	java:S125"<This block of commented-out lines of code should be removed.(úÊİ›8µ«ßÚ‰1
+Z
+java:S1854&"=Remove this useless assignment to local variable "resultSet".(Ûİ˜‹8·«ßÚ‰1
+K
+java:S1481&".Remove this unused "resultSet" local variable.(Ûİ˜‹8º«ßÚ‰1
+X	java:S125)"<This block of commented-out lines of code should be removed.(îÈ®É8»«ßÚ‰1
+Q
+java:S22095"5Change this instance-reference to a static reference.(«’¾o8À«ßÚ‰1
+U	java:S1066"9Replace this use of System.out or System.err by a logger.(«ĞÁÎ8Á«ßÚ‰1
+]	java:S125;"<This block of commented-out lines of code should be removed.(‘ÂˆÉşÿÿÿÿ8Ã«ßÚ‰1
+Q
+java:S2209D"5Change this instance-reference to a static reference.(«’¾o8Å«ßÚ‰1
+Z	java:S106G"9Replace this use of System.out or System.err by a logger.(ûåÚøÿÿÿÿ8Ç«ßÚ‰1
+Z	java:S106H"9Replace this use of System.out or System.err by a logger.(ãÀ–ûÿÿÿÿ8Ç«ßÚ‰1
+Z	java:S106Q"9Replace this use of System.out or System.err by a logger.(Ş£Ÿéüÿÿÿÿ8Ë«ßÚ‰1
