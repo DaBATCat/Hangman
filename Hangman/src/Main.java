@@ -7,8 +7,8 @@ public class Main {
     Model model = new Model();
     model.firstEzGame();
     SQLiteConnection sqLiteConnection = new SQLiteConnection();
-    for(int i = 0; i < sqLiteConnection.getWordsFromTable().length; i++){
-      System.out.println(sqLiteConnection.getWordsFromTable()[i]);
+    for(int i = 0; i < sqLiteConnection.getWordsFromTable().size(); i++){
+      System.out.println(sqLiteConnection.getWordsFromTable().get(i));
     }
   }
 }

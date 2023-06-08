@@ -27,7 +27,7 @@ public class SQLiteConnection {
  }
 
  // Get all Words here
-  public String[] getWordsFromTable() throws SQLException {
+  public ArrayList<String> getWordsFromTable() throws SQLException {
     ArrayList<String> words = new ArrayList<>();
     connection = DriverManager.getConnection(url);
     Statement statement = connection.createStatement();
@@ -36,9 +36,7 @@ public class SQLiteConnection {
     while(resultSet.next()){
       words.add(resultSet.getString(2));
     }
-    String[] result = new String[words.size()];
-    words.toArray(result);
-    return result;
+    return words;
   }
 
  public static String[] getWordsFromTable(Connection connection) throws SQLException{
