@@ -171,7 +171,10 @@ public void firstEzGame(){
                 }
 
             }
-            else System.out.println("DER BUCHSTABE IST ES NICHT!");fails++;
+            else{
+                System.out.println("DER BUCHSTABE IST ES NICHT!");
+                fails++;
+            }
 
         }
 
