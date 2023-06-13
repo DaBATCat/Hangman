@@ -12,6 +12,7 @@ public class Spieler {
     public Spieler(String username, String password) {
         Username = username;
         Password = password;
+        //SPIELER IN DER DATENBANK HIER ERSTELLEN!
 
         //username und passwort werden beim Erstellen eines Spielers mitgegeben. Username ist der Primärschlüssel
     }
