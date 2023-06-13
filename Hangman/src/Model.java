@@ -8,6 +8,7 @@ import java.util.Scanner;
 public class Model {
 private final int versuche=10;
 private int fails=0;
+private Spieler player;
    private String siegwort;
     ArrayList<String> woerter = new ArrayList<String>();
 
@@ -71,7 +72,7 @@ public void nochmalSpielen(){
     System.out.println("möchtest du nochmal spielen? (J/N)");
     input=scanner.nextLine();
     if (input.equalsIgnoreCase("j")||input.equalsIgnoreCase("ja")){
-        firstEzGame();
+        firstEzGame(player);
 
     }
     else if (input.equalsIgnoreCase("n")||input.equalsIgnoreCase("nein")){
@@ -113,17 +114,20 @@ public ArrayList<Integer> Buchstabencheck(String derBuchstabe, String siegwortt)
 public void Victory(){
     System.out.println("Du hast gewonnen!");
     System.out.println("Das Wort ist: "+siegwort);
+    player.increaseWins();
     nochmalSpielen();
 }
 
 public void fail(){
     System.out.println("DU HAST VERLOREN!!!");
     System.out.println("Das wort war: "+siegwort);
+    player.increaseFails();
     nochmalSpielen();
 }
 
 //spiel
-public void firstEzGame(){
+public void firstEzGame(Spieler spieler){
+        player=spieler;
         setFails(0);
     Random rand = new Random();
     int nr=rand.nextInt(woerter.size()-1);
