@@ -1,6 +1,7 @@
 package org.app.utils;
 
 import javax.swing.*;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Random;
@@ -66,7 +67,7 @@ public boolean WortCheck(String dasWort, String siegwort){
 
 
 
-public void nochmalSpielen(){
+public void nochmalSpielen() throws SQLException {
     Scanner scanner = new Scanner(System.in);
     String input="";
     System.out.println("möchtest du nochmal spielen? (J/N)");
@@ -111,14 +112,14 @@ public ArrayList<Integer> Buchstabencheck(String derBuchstabe, String siegwortt)
 }
 
 //einfache Methode die beim Sieg aufgerufen wird
-public void Victory(){
+public void Victory() throws SQLException {
     System.out.println("Du hast gewonnen!");
     System.out.println("Das Wort ist: "+siegwort);
     player.increaseWins();
     nochmalSpielen();
 }
 
-public void fail(){
+public void fail() throws SQLException {
     System.out.println("DU HAST VERLOREN!!!");
     System.out.println("Das wort war: "+siegwort);
     player.increaseFails();
@@ -126,7 +127,7 @@ public void fail(){
 }
 
 //spiel
-public void firstEzGame(Spieler spieler){
+public void firstEzGame(Spieler spieler) throws SQLException {
         player=spieler;
         setFails(0);
     Random rand = new Random();

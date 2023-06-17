@@ -1,4 +1,7 @@
 package org.app.utils;
+
+import java.sql.SQLException;
+
 //JEDE INSTANZ DIESER KLASSE IST EIN EINZIGARTIGER SPIELER, DER BEIM ERSTELLEN DIESER INSTANZ GENERIERT WIRD UND AUCH IN DIE DATENBANK ÜBERFÜHRT WERDEN MUSS!!
 public class Spieler {
     private String Username;
@@ -7,23 +10,31 @@ public class Spieler {
     private int losses=0;
     private int games=wins+losses;//anzahl der Spiele.Kannst du eigentlich so in der datenbank übernehmen mit der Summe aus wins+losses
 
+    SQLiteConnection sqLiteConnection = new SQLiteConnection();
 
 
-    public Spieler(String username, String password) {
+
+    public Spieler(String username, String password) throws SQLException {
         Username = username;
         Password = password;
         //SPIELER IN DER DATENBANK HIER ERSTELLEN!
 
+        // Hier wird überprüft, ob in der Datenbank schon ein User mit dem Usernamen vorhanden ist. Wenn er es
+        // nicht ist, wird ein neuer User angelegt.
+        if (!sqLiteConnection.userIsRegistered(username)) sqLiteConnection.addUser(username, password);
+
         //username und passwort werden beim Erstellen eines Spielers mitgegeben. Username ist der Primärschlüssel
     }
 
-    public void increaseWins(){
+    public void increaseWins() throws SQLException {
         wins++;
         //wins auch in der Datenbank vergrößern! Geht mit dem update Befehl
+        sqLiteConnection.incrementWins(Username);
     }
 
-    public void increaseFails(){
+    public void increaseFails() throws SQLException {
         losses++;
+        sqLiteConnection.incrementLosses(Username);
     }//fails auch in der Datenbank vergrößern! Geht mit dem update Befehl
 
 //siegesquote braucht nicht in die Datenbank
