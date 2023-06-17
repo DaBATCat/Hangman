@@ -1,0 +1,12 @@
+
+«
+java:S1598"This file "MySQLConnection.java" should be located in "org\app\utils" directory, not in "E:\Users\Daniel\Documents\GitHub\Hangman\Hangman\src".(‹ãïÕüÿÿÿÿ
+c
+java:S2095"HUse try-with-resources or close this "Connection" in a "finally" clause.( éæ¶ıÿÿÿÿ
+b
+java:S2095"GUse try-with-resources or close this "Statement" in a "finally" clause.(é°Áµşÿÿÿÿ
+P	java:S125"<This block of commented-out lines of code should be removed.(¾¸õ{
+Q
+java:S6437"6Revoke and change this password, as it is compromised.( éæ¶ıÿÿÿÿ
+S	java:S106"9Replace this use of System.out or System.err by a logger.(ŠÛ¼Öùÿÿÿÿ
+Q	java:S125"<This block of commented-out lines of code should be removed.(§œãÙ

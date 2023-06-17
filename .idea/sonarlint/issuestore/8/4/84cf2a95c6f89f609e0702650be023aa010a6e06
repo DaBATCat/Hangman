@@ -1,0 +1,40 @@
+
+v
+java:S2293"YReplace the type specification in this constructor call with the diamond operator ("<>").(ìÂÈÇ8®ÎüÖŒ1
+
+java:S1319["pThe return type of this method should be an interface such as "List" rather than the implementation "ArrayList".(¬¶¸‡8°ÎüÖŒ1
+¡
+java:S1598"…This file "Model.java" should be located in "org\app\utils" directory, not in "E:\Users\Daniel\Documents\GitHub\Hangman\Hangman\src".(‹ãïÕüÿÿÿÿ
+7
+java:S1170	"!Make this final field static too.(Åäš
+N	java:S1060"9Replace this use of System.out or System.err by a logger.(Ëí¶ù
+N	java:S1064"9Replace this use of System.out or System.err by a logger.(×ÆúË
+o	java:S100:"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(–ŸÌ¥ùÿÿÿÿ8«×üÖŒ1
+c
+java:S1126<"AReplace this if-then-else statement by a single return statement.(¨œ†ÿùÿÿÿÿ8¬×üÖŒ1
+8
+java:S3626P"Remove this redundant jump.(ûÁİ…8®×üÖŒ1
+S	java:S106H"9Replace this use of System.out or System.err by a logger.(ªñÃ®şÿÿÿÿ
+U	java:S106O"9Replace this use of System.out or System.err by a logger.(ôÎØ8²×üÖŒ1
+U	java:S106S"9Replace this use of System.out or System.err by a logger.(”ûÙÛ8³×üÖŒ1
+j	java:S100["NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(¬¶¸‡8´×üÖŒ1
+j	java:S100r"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ÖÖ¼ç8º×üÖŒ1
+U	java:S106s"9Replace this use of System.out or System.err by a logger.(æšß8»×üÖŒ1
+Z	java:S106t"9Replace this use of System.out or System.err by a logger.(øñ¬®ÿÿÿÿÿ8¼×üÖŒ1
+U	java:S106z"9Replace this use of System.out or System.err by a logger.(ÊˆŞ•8¾×üÖŒ1
+U	java:S106{"9Replace this use of System.out or System.err by a logger.(èùû¢8¿×üÖŒ1
+u
+java:S3776"RRefactor this method to reduce its Cognitive Complexity from 23 to the 15 allowed.(ş¢ßñúÿÿÿÿ8Á×üÖŒ1
+_
+java:S1854¨"ARemove this useless assignment to local variable "buchstabenPos".(ÀĞÆ“8Â×üÖŒ1
+A
+java:S2119„"Save and re-use this "Random".(šŸ«íøÿÿÿÿ8È×üÖŒ1
+U	java:S106Š"9Replace this use of System.out or System.err by a logger.(€Í´8Ë×üÖŒ1
+[	java:S106”"9Replace this use of System.out or System.err by a logger.(ùì×ºüÿÿÿÿ8Í×üÖŒ1
+[	java:S106—"9Replace this use of System.out or System.err by a logger.(£·Í¼şÿÿÿÿ8Ğ×üÖŒ1
+[	java:S106£"9Replace this use of System.out or System.err by a logger.(ÅÕö­øÿÿÿÿ8Ó×üÖŒ1
+[	java:S106«"9Replace this use of System.out or System.err by a logger.(µ¥üßşÿÿÿÿ8Õ×üÖŒ1
+[	java:S106³"9Replace this use of System.out or System.err by a logger.(©÷‘øÿÿÿÿ8××üÖŒ1
+V	java:S106Ä"9Replace this use of System.out or System.err by a logger.(Š†Ï«8Ù×üÖŒ1
+V	java:S106Ê"9Replace this use of System.out or System.err by a logger.(›ñˆ«8Û×üÖŒ1
+V	java:S106Ë"9Replace this use of System.out or System.err by a logger.(«óß’8Ü×üÖŒ1
