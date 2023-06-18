@@ -15,27 +15,29 @@ public class SQLiteConnection {
     // management:
     // Name der Tabelle: management
     // Spalten der Tabelle: username varchar(32) (PK) | passwort varchar(64) | spiele int | wins int | losses int
-    static enum Table {
+    public static enum Table {
       WORDS,
       MANAGEMENT
     }
     // Query für Methoden, bei denen man keine Query übergibt
     static String query = "select * from management";
     static Connection connection = null;
-    static String url ;
+
+  // Welche Datenbank wird angesteuert? Wir haben nur die Datenbank hangman.db
+    static String url = "jdbc:sqlite:hangman.db"; ;
     public static void main(String[] args) throws SQLException {
-      // Welche Datenbank wird angesteuert? Wir haben nur die Datenbank hangman.db
-      url = "jdbc:sqlite:hangman.db";
+
 
         try {
       connect(url);
 
       // executions here
 
-          new SQLiteConnection().incrementWins("Daniel");
-          new SQLiteConnection().printTable(Table.MANAGEMENT);
-          new SQLiteConnection().decrementWins("Daniel");
-          new SQLiteConnection().printTable(Table.MANAGEMENT);
+          // System.out.println(new SQLiteConnection().passwordEqualsWithUsername("Daniel", "penis1"));
+          // new SQLiteConnection().executeSimpleQuery();
+
+          new SQLiteConnection().deleteUser("assa");
+
 
         }
     catch (SQLException e){
@@ -47,6 +49,20 @@ public class SQLiteConnection {
       // Datenbankverbindung wird geschlossen
       connection.close();
     printtln("Closed connection");
+ }
+
+ // Lösche einen User anhand seines Usernames
+ public void deleteUser(String username){
+      printtln("User " + username + " is going to be deleted. Old table:");
+      printTable(Table.MANAGEMENT);
+      try{
+        executeSimpleQuery(String.format("delete from management where username = '%s'", username));
+      }
+      catch (SQLException e){
+        e.printStackTrace();
+      }
+   printtln("Deleted user " + username + ", new Table:");
+      printTable(Table.MANAGEMENT);
  }
 
 // Erhöhe losses um 1
@@ -87,17 +103,38 @@ public class SQLiteConnection {
  }
 
  // Überprüfe anhand des usernames, ob der Benutzer bereits registriert ist (returned true oder false)
- public boolean userIsRegistered(String username) throws SQLException {
-   ArrayList<String> usernames = new ArrayList<>();
-   connection = DriverManager.getConnection(url);
-   Statement statement = connection.createStatement();
-   statement.executeUpdate("select * from management");
-   ResultSet resultSet = statement.executeQuery(query);
-   while(resultSet.next()){
-     usernames.add(resultSet.getString(1));
-   }
-   for (String s : usernames) {
-     if (Objects.equals(s, username)) return true;
+ public boolean userIsRegistered(String username) {
+      try{
+        ArrayList<String> usernames = new ArrayList<>();
+        connection = DriverManager.getConnection(url);
+        Statement statement = connection.createStatement();
+        statement.executeUpdate("select * from management");
+        ResultSet resultSet = statement.executeQuery("select * from management");
+        while(resultSet.next()){
+          usernames.add(resultSet.getString(1));
+        }
+        for (String s : usernames) {
+          if (Objects.equals(s, username)) return true;
+        }
+        return false;
+
+      }
+      catch (SQLException e) {
+        e.printStackTrace();
+
+      }
+      return false;
+ }
+
+ // Überprüft, ob das übergebene Passwort mit dem Usernamen übereinstimmt
+ public boolean passwordEqualsWithUsername(String username, String password) throws SQLException {
+   if(userIsRegistered(username)){
+     String defaultPassword;
+     connection = DriverManager.getConnection(url);
+     Statement statement = connection.createStatement();
+     ResultSet resultSet = statement.executeQuery(String.format("select passwort from management where username = '%s'", username));
+     defaultPassword = resultSet.getString(1);
+     if(defaultPassword.equals(password)) return true;
    }
    return false;
  }
@@ -177,34 +214,43 @@ public class SQLiteConnection {
   //}
 
   // Gibt die übergebene Tabelle (mehr oder weniger gut formatiert) auf der Konsole aus
-  private void printTable(Table table) throws SQLException {
-    Statement statement = connection.createStatement();
-    String tableQuery;
-    if(table == Table.WORDS) {
-      tableQuery = "select * from words";
-      statement.executeUpdate(tableQuery);
-      printtln("Query executed! (" + tableQuery + ")");
-      ResultSet resultSet = statement.executeQuery(tableQuery);
+  public void printTable(Table table) {
+      try{
+        Statement statement = connection.createStatement();
+        String tableQuery;
+        if(table == Table.WORDS) {
+          tableQuery = "select * from words";
+          statement.executeUpdate(tableQuery);
+          printtln("Query executed! (" + tableQuery + ")");
+          ResultSet resultSet = statement.executeQuery(tableQuery);
 
-      printtln("Printing Table: " + table.toString().toLowerCase());
-      System.out.println("ID\tword");
-      while (resultSet.next()) {
-        System.out.println(resultSet.getInt(1) + "\t" + resultSet.getString(2));
+          printtln("Printing Table: " + table.toString().toLowerCase());
+          System.out.println("ID\tword");
+          while (resultSet.next()) {
+            System.out.println(resultSet.getInt(1) + "\t" + resultSet.getString(2));
+          }
+        }
+        else{
+          tableQuery = "select * from management";
+          statement.executeUpdate(tableQuery);
+          printtln("Query executed! (" + tableQuery + ")");
+          ResultSet resultSet = statement.executeQuery(tableQuery);
+
+          while(resultSet.next()){
+            System.out.println( "username='" + resultSet.getString(1) + "'\t\t" +
+                    ", password='" + resultSet.getString(2) + "\t\t" +
+                    ", spiele=" + resultSet.getInt(3) + "'\t\t" +
+                    ", wins=" + resultSet.getInt(4) + "\t\t" +
+                    ", losses=" + resultSet.getInt(5));
+
+          }
+
+        }
       }
-    }
-    else{
-      tableQuery = "select * from management";
-      statement.executeUpdate(tableQuery);
-      printtln("Query executed! (" + tableQuery + ")");
-      ResultSet resultSet = statement.executeQuery(tableQuery);
-
-      System.out.println("username\tpassword\tspiele\twins\tlosses");
-      System.out.println(resultSet.getString(1) + "\t" + resultSet.getString(2) + "\t"+
-              resultSet.getInt(3) + "\t" + resultSet.getInt(4) + "\t" + resultSet.getInt(5));
-
-    }
-
-
+      catch (SQLException e){
+        printtln("Error!");
+        e.printStackTrace();
+      }
   }
 
   // Gibt alle Wörter der Datenbank aus

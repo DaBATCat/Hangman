@@ -14,14 +14,19 @@ public class Spieler {
 
 
 
-    public Spieler(String username, String password) throws SQLException {
+    public Spieler(String username, String password) {
         Username = username;
         Password = password;
         //SPIELER IN DER DATENBANK HIER ERSTELLEN!
 
         // Hier wird überprüft, ob in der Datenbank schon ein User mit dem Usernamen vorhanden ist. Wenn er es
         // nicht ist, wird ein neuer User angelegt.
-        if (!sqLiteConnection.userIsRegistered(username)) sqLiteConnection.addUser(username, password);
+        try{
+            sqLiteConnection.addUser(username, password);
+        }
+        catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         //username und passwort werden beim Erstellen eines Spielers mitgegeben. Username ist der Primärschlüssel
     }
