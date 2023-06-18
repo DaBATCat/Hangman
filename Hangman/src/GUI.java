@@ -22,7 +22,7 @@ public class GUI extends JFrame implements ActionListener, GUIinterface{
   JButton registerFinalButton = new JButton("Registrieren");
   JCheckBox showPassword = new JCheckBox("Passwort anzeigen");
 
-  public Spieler getSpieler() {
+  public static Spieler getSpieler() {
     return spieler;
   }
 
@@ -30,7 +30,7 @@ public class GUI extends JFrame implements ActionListener, GUIinterface{
     this.spieler = spieler;
   }
 
-  Spieler spieler;
+  static Spieler spieler;
   public GUI() throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
     setLayoutManager();
     setLocationAndSize();
@@ -145,10 +145,11 @@ public void runGame() {
       GameGUI gameGUI = new GameGUI();
       gameGUI.setTitle("Hangman");
       gameGUI.setVisible(true);
-      gameGUI.setBounds(10,10,400,300);
+      gameGUI.setBounds(10,10,400,420);
       gameGUI.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
       gameGUI.setLocationRelativeTo(null);
       gameGUI.setResizable(false);
+      gameGUI.setSpieler(spieler);
     }
     catch (Exception e){
       e.printStackTrace();

@@ -4,6 +4,10 @@ import java.sql.SQLException;
 
 //JEDE INSTANZ DIESER KLASSE IST EIN EINZIGARTIGER SPIELER, DER BEIM ERSTELLEN DIESER INSTANZ GENERIERT WIRD UND AUCH IN DIE DATENBANK ÜBERFÜHRT WERDEN MUSS!!
 public class Spieler {
+    public String getUsername() {
+        return Username;
+    }
+
     private String Username;
     private String Password;
     private int wins=0;

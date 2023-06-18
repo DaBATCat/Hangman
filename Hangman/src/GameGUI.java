@@ -2,8 +2,10 @@ package org.app.utils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class GameGUI extends JFrame{
+public class GameGUI extends JFrame implements ActionListener {
   Container container = getContentPane();
   String[] imagePaths = new String[10];
   ImageIcon imageIcon;
@@ -12,6 +14,17 @@ public class GameGUI extends JFrame{
   JLabel triesCountLabel = new JLabel("10/10");
   JLabel searchedWordLabel = new JLabel("");
   Model model = new Model();
+  JMenuBar menuBar = new JMenuBar();
+  JMenu menu = new JMenu("Menü");
+  JMenuItem statisticsMenuItem = new JMenuItem("Statistiken");
+  JMenuItem deleteAccountMenuItem = new JMenuItem("Account löschen");
+  SQLiteConnection sqLiteConnection;
+
+  public void setSpieler(Spieler spieler) {
+    this.spieler = spieler;
+  }
+
+  Spieler spieler;
   private void initImagePaths(){
     for(int i = 0; i < 10; i++){
       imagePaths[i] = "Hangman/Images/Progress" + (i+1) + ".png";
@@ -26,7 +39,7 @@ public class GameGUI extends JFrame{
     setLayoutManager();
     setLocationAndSize();
     addComponentsToContainer();
-    // addActionEvent();
+    addActionEvent();
 
     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
   }
@@ -52,6 +65,34 @@ public class GameGUI extends JFrame{
     container.add(imageLabel);
     container.add(triesLabel);
     container.add(triesCountLabel);
+    // Upper menu components
+    menu.add(statisticsMenuItem);
+    menu.add(deleteAccountMenuItem);
+    menuBar.add(menu);
+    setJMenuBar(menuBar);
+  }
+  public void addActionEvent(){
+    deleteAccountMenuItem.addActionListener(this);
+    statisticsMenuItem.addActionListener(this);
+  }
+
+  @Override
+  public void actionPerformed(ActionEvent e){
+    System.out.println(e.getActionCommand());
+    sqLiteConnection = new SQLiteConnection();
+
+    // Show statistics of the player
+    if(e.getSource().equals(statisticsMenuItem)){
+      showStatistics();
+    }
+  }
+  public void showStatistics(){
+    String stats;
+    String username = spieler.getUsername();
+    stats = "Deine Statistiken:\n " +
+            "Name: " + username + "\n"+
+            "Spiele insgesamt: " + sqLiteConnection.getWins(username);
+    JOptionPane.showMessageDialog(this, stats);
   }
   public void initWords(){
     //TODO: Jlabel searchedWordLabel in central display, JMenu for stats & options
@@ -62,7 +103,7 @@ class Test2{
     GameGUI gameGUI = new GameGUI();
     gameGUI.setTitle("Hangman");
     gameGUI.setVisible(true);
-    gameGUI.setBounds(10,10,400,400);
+    gameGUI.setBounds(10,10,400,420);
     gameGUI.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
     gameGUI.setLocationRelativeTo(null);
     gameGUI.setResizable(false);

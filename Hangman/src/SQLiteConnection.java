@@ -51,6 +51,20 @@ public class SQLiteConnection {
     printtln("Closed connection");
  }
 
+ public int getWins(String username){
+      try{
+        Statement statement = connection.createStatement();
+        String tableQuery;
+        tableQuery = String.format("select wins from management where username = '%s'", username);
+        ResultSet resultSet = statement.executeQuery(query);
+        return resultSet.getInt(1);
+      }
+      catch (SQLException e){
+        e.printStackTrace();
+      }
+      return 0;
+ }
+
  // Lösche einen User anhand seines Usernames
  public void deleteUser(String username){
       printtln("User " + username + " is going to be deleted. Old table:");
