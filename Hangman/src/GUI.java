@@ -22,6 +22,14 @@ public class GUI extends JFrame implements ActionListener, GUIinterface{
   JButton registerFinalButton = new JButton("Registrieren");
   JCheckBox showPassword = new JCheckBox("Passwort anzeigen");
 
+  public Spieler getSpieler() {
+    return spieler;
+  }
+
+  public void setSpieler(Spieler spieler) {
+    this.spieler = spieler;
+  }
+
   Spieler spieler;
   public GUI() throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
     setLayoutManager();
@@ -79,9 +87,10 @@ public class GUI extends JFrame implements ActionListener, GUIinterface{
     if (e.getSource().equals(loginButton)) {
 
       try {
-        // If the login is successfull
+        // If the login is successful
         if(sqLiteConnection.userIsRegistered(usernameText) && sqLiteConnection.passwordEqualsWithUsername(usernameText, passwordText.toString())){
-          JOptionPane.showMessageDialog(this, "Ja geil!!!");
+          dispose();
+          runGame();
         }
         else{
           JOptionPane.showMessageDialog(this, "Username oder Passwort ist falsch");
@@ -116,6 +125,8 @@ public class GUI extends JFrame implements ActionListener, GUIinterface{
       if(!sqLiteConnection.userIsRegistered(usernameText)){
         spieler = new Spieler(usernameText, passwordText.toString());
         sqLiteConnection.printTable(SQLiteConnection.Table.MANAGEMENT);
+        dispose();
+        runGame();
       }
       else{
         JOptionPane.showMessageDialog(this, "Dieser Username ist bereits vergeben.");
@@ -129,14 +140,31 @@ public class GUI extends JFrame implements ActionListener, GUIinterface{
     System.out.println("Button pressed, after");
   }
 
+public void runGame() {
+    try{
+      GameGUI gameGUI = new GameGUI();
+      gameGUI.setTitle("Hangman");
+      gameGUI.setVisible(true);
+      gameGUI.setBounds(10,10,400,300);
+      gameGUI.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+      gameGUI.setLocationRelativeTo(null);
+      gameGUI.setResizable(false);
+    }
+    catch (Exception e){
+      e.printStackTrace();
+    }
 }
+
+}
+
+
 
 class Test{
   public static void main(String[] args) throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
     GUI gui = new GUI();
     gui.setTitle("Log In");
     gui.setVisible(true);
-    gui.setBounds(10,10,400,600);
+    gui.setBounds(10,10,400,320);
     gui.setDefaultCloseOperation(EXIT_ON_CLOSE);
     gui.setLocationRelativeTo(null);
     gui.setResizable(false);

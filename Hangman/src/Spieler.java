@@ -22,7 +22,7 @@ public class Spieler {
         // Hier wird überprüft, ob in der Datenbank schon ein User mit dem Usernamen vorhanden ist. Wenn er es
         // nicht ist, wird ein neuer User angelegt.
         try{
-            sqLiteConnection.addUser(username, password);
+            if(!sqLiteConnection.userIsRegistered(username)) sqLiteConnection.addUser(username, password);
         }
         catch (SQLException e) {
             e.printStackTrace();
