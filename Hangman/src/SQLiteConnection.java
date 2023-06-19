@@ -37,7 +37,7 @@ public class SQLiteConnection {
           // System.out.println(new SQLiteConnection().passwordEqualsWithUsername("Daniel", "penis1"));
           // new SQLiteConnection().executeSimpleQuery();
 
-          new SQLiteConnection().printTable(Table.MANAGEMENT);
+          new SQLiteConnection().printWords(connection);
 
 
         }
@@ -50,6 +50,32 @@ public class SQLiteConnection {
       // Datenbankverbindung wird geschlossen
       connection.close();
     printtln("Closed connection");
+ }
+
+// Löscht ein Wort aus der Datenbank
+ public void removeWord(String word){
+      if(wordIsInTable(word)){
+        try{
+          // Setzt das 1. Zeichen im String zu einem Großbuchstaben
+          word = word.substring(0,1).toUpperCase() + word.substring(1);
+          Statement statement = connection.createStatement();
+          String tableQuery;
+          tableQuery = String.format("delete from words where word = '%s'", word );
+          statement.executeUpdate(tableQuery);
+        }
+        catch (SQLException e){
+          e.printStackTrace();
+        }
+      }
+ }
+
+ // Prüfe, ob das übergebene Wort bereits in der Datenbank ist
+ public boolean wordIsInTable(String word){
+    ArrayList<String> words = getWordsFromTable();
+   for (String s : words) {
+     if (word.equalsIgnoreCase(s)) return true;
+   }
+   return false;
  }
 
  // Erhöhe die Anzahl gespielter Spiele des Users um 1
@@ -206,12 +232,18 @@ public class SQLiteConnection {
  }
 
  // Ein Wort zur Datenbank hinzufügen
- public void addWord(String word) throws SQLException {
-   Statement statement = connection.createStatement();
-   String tableQuery;
-   tableQuery = String.format("insert into words (word) values ('%s')", word);
-   statement.executeUpdate(tableQuery);
-   printtln("Query executed! (" + tableQuery + ")");
+ public void addWord(String word) {
+      try{
+        word = word.substring(0,1).toUpperCase() + word.substring(1);
+        Statement statement = connection.createStatement();
+        String tableQuery;
+        tableQuery = String.format("insert into words (word) values ('%s')", word);
+        statement.executeUpdate(tableQuery);
+        printtln("Query executed! (" + tableQuery + ")");
+      }
+      catch (SQLException e){
+        e.printStackTrace();
+      }
  }
 
  // Einen Benutzer erstellen, bzw. ihn der Datenbank hinzufügen
@@ -232,16 +264,23 @@ public class SQLiteConnection {
  }
 
  // Get all Words here
-  public ArrayList<String> getWordsFromTable() throws SQLException {
-    ArrayList<String> words = new ArrayList<>();
-    connection = DriverManager.getConnection(url);
-    Statement statement = connection.createStatement();
-    statement.executeUpdate("select * from words");
-    ResultSet resultSet = statement.executeQuery(query);
-    while(resultSet.next()){
-      words.add(resultSet.getString(2));
-    }
-    return words;
+  public ArrayList<String> getWordsFromTable(){
+      try{
+        ArrayList<String> words = new ArrayList<>();
+        connection = DriverManager.getConnection(url);
+        Statement statement = connection.createStatement();
+        statement.executeUpdate("select word from words");
+        ResultSet resultSet = statement.executeQuery("select word from words");
+        while(resultSet.next()){
+          words.add(resultSet.getString(1));
+        }
+        return words;
+
+      }
+      catch (SQLException e){
+        e.printStackTrace();
+      }
+      return new ArrayList<>();
   }
 
   // Veraltet
@@ -322,11 +361,13 @@ public class SQLiteConnection {
   // Gibt alle Wörter der Datenbank aus
   private void printWords(Connection connection) throws SQLException{
     Statement statement = connection.createStatement();
-    statement.executeUpdate(query);
-    printtln("Query executed! (" + query + ")");
-    ResultSet resultSet = statement.executeQuery(query);
+    String tableQuery;
+    tableQuery = "select word from words";
+    statement.executeUpdate(tableQuery);
+    printtln("Query executed! (" + tableQuery + ")");
+    ResultSet resultSet = statement.executeQuery(tableQuery);
     while(resultSet.next()){
-      System.out.println(resultSet.getString(2));
+      System.out.println(resultSet.getString(1));
     }
   }
 

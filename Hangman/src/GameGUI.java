@@ -18,7 +18,11 @@ public class GameGUI extends JFrame implements ActionListener {
   JMenu menu = new JMenu("Menü");
   JMenuItem statisticsMenuItem = new JMenuItem("Statistiken");
   JMenuItem deleteAccountMenuItem = new JMenuItem("Account löschen");
+  JMenuItem addWordMenuItem = new JMenuItem("Wort hinzufügen");
+  JMenuItem removeWordItem = new JMenuItem("Wort löschen (admin)");
   SQLiteConnection sqLiteConnection;
+  boolean hasAdminPermission;
+
 
   public void setSpieler(Spieler spieler) {
     this.spieler = spieler;
@@ -32,6 +36,7 @@ public class GameGUI extends JFrame implements ActionListener {
   }
 
   public GameGUI() throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+    hasAdminPermission = false;
     initImagePaths();
     initWords();
 
@@ -68,10 +73,14 @@ public class GameGUI extends JFrame implements ActionListener {
     // Upper menu components
     menu.add(statisticsMenuItem);
     menu.add(deleteAccountMenuItem);
+    menu.add(addWordMenuItem);
+    menu.add(removeWordItem);
     menuBar.add(menu);
     setJMenuBar(menuBar);
   }
   public void addActionEvent(){
+    removeWordItem.addActionListener(this);
+    addWordMenuItem.addActionListener(this);
     deleteAccountMenuItem.addActionListener(this);
     statisticsMenuItem.addActionListener(this);
   }
@@ -84,6 +93,55 @@ public class GameGUI extends JFrame implements ActionListener {
     // Show statistics of the player
     if(e.getSource().equals(statisticsMenuItem)){
       showStatistics();
+    }
+    // Add word menu
+    if(e.getSource().equals(addWordMenuItem)){
+      showAddWord();
+    }
+    // Remove a word from the database
+    if(e.getSource().equals(removeWordItem)){
+      removeWord();
+    }
+  }
+
+  // Appears if the user had the admin password
+  public void removeWordPermission(){
+    hasAdminPermission = true;
+    String removedWantedWord = JOptionPane.showInputDialog("Gib hier ein Wort ein, das gelöscht werden soll:");
+    // Check, if the given word is in the database
+    if(removedWantedWord != null && sqLiteConnection.wordIsInTable(removedWantedWord)) {
+      // remove the word
+      sqLiteConnection.removeWord(removedWantedWord);
+      JOptionPane.showMessageDialog(this, removedWantedWord + " wurde entfernt.");
+      removeWordPermission();
+    }
+    else if (removedWantedWord != null){
+      JOptionPane.showMessageDialog(this, removedWantedWord + " wurde nicht gefunden.");
+      removeWordPermission();
+    }
+  }
+
+  public void removeWord(){
+    if(!hasAdminPermission) createPasswordGUI();
+    else removeWordPermission();
+  }
+  public void showAddWord(){
+    String suggestedWord = JOptionPane.showInputDialog("Gib hier ein neues Wort ein:");
+    // If the suggested word has minimum of 2 chars
+    // and the word is not already defined in the database
+    if(suggestedWord != null && suggestedWord.length() >= 2
+            && !sqLiteConnection.wordIsInTable(suggestedWord)){
+      sqLiteConnection.addWord(suggestedWord);
+      JOptionPane.showMessageDialog(this, String.format("\"%s\" wurde hinzugefügt.", suggestedWord));
+    }
+    else if(suggestedWord != null && suggestedWord.length() <= 1 ){
+      JOptionPane.showMessageDialog(this, "Das Wort muss mindestens 2 Zeichen lang sein.");
+      showAddWord();
+    }
+    else if(suggestedWord != null)
+    {
+      JOptionPane.showMessageDialog(this, "Dieses Wort wurde bereits vergeben.");
+      showAddWord();
     }
   }
   public void showStatistics(){
@@ -98,6 +156,20 @@ public class GameGUI extends JFrame implements ActionListener {
   }
   public void initWords(){
     //TODO: Jlabel searchedWordLabel in central display, JMenu for stats & options
+  }
+  public void createPasswordGUI(){
+    try{
+      PasswordGUI passwordGUI = new PasswordGUI(this);
+      passwordGUI.setTitle("Passwort erforderlich");
+      passwordGUI.setVisible(true);
+      passwordGUI.setBounds(10,10,155,140);
+      passwordGUI.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+      passwordGUI.setLocationRelativeTo(null);
+      passwordGUI.setResizable(false);
+    }
+    catch (Exception e){
+      e.printStackTrace();
+    }
   }
 
   public static void main(String[] args) throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
