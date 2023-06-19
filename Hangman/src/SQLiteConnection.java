@@ -11,11 +11,11 @@ public class SQLiteConnection {
     // hangman.db:
 
     // Name der Tabelle: words
-    // Spalten der Tabelle: id (PK) | word
+    // Spalten der Tabelle: id int (PK) autoincrement | word
     // -----------------------------------------------------------
     // management:
     // Name der Tabelle: management
-    // Spalten der Tabelle: username varchar(32) (PK) | passwort varchar(64) | spiele int | wins int | losses int
+    // Spalten der Tabelle: username varchar(32) (PK) | passwort varchar(64) | spiele int | wins int | losses int | addedwords int
     public static enum Table {
       WORDS,
       MANAGEMENT
@@ -37,8 +37,8 @@ public class SQLiteConnection {
           // System.out.println(new SQLiteConnection().passwordEqualsWithUsername("Daniel", "penis1"));
           // new SQLiteConnection().executeSimpleQuery();
 
-          new SQLiteConnection().printWords(connection);
-
+          new SQLiteConnection().executeSimpleQuery("delete from management where " +
+                  "username = 'Daniel'");
 
         }
     catch (SQLException e){
@@ -50,6 +50,10 @@ public class SQLiteConnection {
       // Datenbankverbindung wird geschlossen
       connection.close();
     printtln("Closed connection");
+ }
+
+ public void createDB() throws SQLException {
+      new SQLiteConnection().executeSimpleQuery("create database hangman;");
  }
 
 // Löscht ein Wort aus der Datenbank

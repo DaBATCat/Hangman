@@ -89,6 +89,11 @@ public class GameGUI extends JFrame implements ActionListener {
   public void actionPerformed(ActionEvent e){
     System.out.println(e.getActionCommand());
     sqLiteConnection = new SQLiteConnection();
+    try {
+      Thread.sleep(1000);
+    } catch (InterruptedException ex) {
+      throw new RuntimeException(ex);
+    }
 
     // Show statistics of the player
     if(e.getSource().equals(statisticsMenuItem)){
@@ -133,6 +138,7 @@ public class GameGUI extends JFrame implements ActionListener {
             && !sqLiteConnection.wordIsInTable(suggestedWord)){
       sqLiteConnection.addWord(suggestedWord);
       JOptionPane.showMessageDialog(this, String.format("\"%s\" wurde hinzugefügt.", suggestedWord));
+      showAddWord();
     }
     else if(suggestedWord != null && suggestedWord.length() <= 1 ){
       JOptionPane.showMessageDialog(this, "Das Wort muss mindestens 2 Zeichen lang sein.");
