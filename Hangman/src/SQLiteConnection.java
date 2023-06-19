@@ -36,7 +36,7 @@ public class SQLiteConnection {
           // System.out.println(new SQLiteConnection().passwordEqualsWithUsername("Daniel", "penis1"));
           // new SQLiteConnection().executeSimpleQuery();
 
-          new SQLiteConnection().deleteUser("assa");
+          new SQLiteConnection().printTable(Table.MANAGEMENT);
 
 
         }
@@ -252,8 +252,8 @@ public class SQLiteConnection {
 
           while(resultSet.next()){
             System.out.println( "username='" + resultSet.getString(1) + "'\t\t" +
-                    ", password='" + resultSet.getString(2) + "\t\t" +
-                    ", spiele=" + resultSet.getInt(3) + "'\t\t" +
+                    ", password='" + resultSet.getString(2) + "'\t\t" +
+                    ", spiele=" + resultSet.getInt(3) + "\t\t" +
                     ", wins=" + resultSet.getInt(4) + "\t\t" +
                     ", losses=" + resultSet.getInt(5));
 
