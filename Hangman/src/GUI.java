@@ -89,6 +89,7 @@ public class GUI extends JFrame implements ActionListener, GUIinterface{
       try {
         // If the login is successful
         if(sqLiteConnection.userIsRegistered(usernameText) && sqLiteConnection.passwordEqualsWithUsername(usernameText, passwordText.toString())){
+          spieler = new Spieler(usernameText, passwordText.toString());
           dispose();
           runGame();
         }

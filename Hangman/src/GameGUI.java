@@ -88,17 +88,18 @@ public class GameGUI extends JFrame implements ActionListener {
   }
   public void showStatistics(){
     String stats;
-    String username = spieler.getUsername();
-    stats = "Deine Statistiken:\n " +
-            "Name: " + username + "\n"+
-            "Spiele insgesamt: " + sqLiteConnection.getWins(username);
+    String username = GUI.getSpieler().getUsername();
+    stats = "Deine Statistiken:\n" +
+            "• Name: " + username + "\n"+
+            "• Spiele insgesamt: " + sqLiteConnection.getWins(username) + "\n" +
+            "• Spiele gewonnen: " + sqLiteConnection.getWins(username) + "\n" +
+            "• Spiele verloren: " + sqLiteConnection.getLosses(username) + "\n";
     JOptionPane.showMessageDialog(this, stats);
   }
   public void initWords(){
     //TODO: Jlabel searchedWordLabel in central display, JMenu for stats & options
   }
-}
-class Test2{
+
   public static void main(String[] args) throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
     GameGUI gameGUI = new GameGUI();
     gameGUI.setTitle("Hangman");
@@ -108,4 +109,5 @@ class Test2{
     gameGUI.setLocationRelativeTo(null);
     gameGUI.setResizable(false);
   }
+
 }

@@ -1,5 +1,6 @@
 package org.app.utils;
 
+import javax.swing.plaf.nimbus.State;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -51,12 +52,63 @@ public class SQLiteConnection {
     printtln("Closed connection");
  }
 
+ // Erhöhe die Anzahl gespielter Spiele des Users um 1
+ public void incrementGamesPlayed(String username) throws SQLException {
+   Statement statement = connection.createStatement();
+   String tableQuery;
+   tableQuery = String.format("update management set spiele = spiele + 1 where username = '%s'", username );
+   statement.executeUpdate(tableQuery);
+   // printtln("Query executed! (" + tableQuery + ")");
+
+ }
+ // Verringere die Anzahl gespielter Spiele des Users um 1
+ public void decrementGamesPlayed(String username) throws SQLException {
+   Statement statement = connection.createStatement();
+   String tableQuery;
+   tableQuery = String.format("update management set spiele = spiele - 1 where username = '%s'", username );
+   statement.executeUpdate(tableQuery);
+   // printtln("Query executed! (" + tableQuery + ")");
+
+ }
+
+ // Anzahl der gespielten Spiele zurückgeben
+  public int getGamesPlayed(String username){
+      try{
+        Statement statement = connection.createStatement();
+        String tableQuery;
+        tableQuery = String.format("select spiele from management where username = '%s'", username);
+        ResultSet resultSet = statement.executeQuery(tableQuery);
+        return resultSet.getInt(1);
+
+      }
+      catch (SQLException e){
+        e.printStackTrace();
+      }
+      return 0;
+  }
+
+  // Anzahl der verlorenen Spiele zurückgeben
+  public int getLosses(String username){
+    try{
+      Statement statement = connection.createStatement();
+      String tableQuery;
+      tableQuery = String.format("select losses from management where username = '%s'", username);
+      ResultSet resultSet = statement.executeQuery(tableQuery);
+      return resultSet.getInt(1);
+    }
+    catch (SQLException e){
+      e.printStackTrace();
+    }
+    return 0;
+  }
+
+// Anzahl der gewonnenen Spiele zurückgeben
  public int getWins(String username){
       try{
         Statement statement = connection.createStatement();
         String tableQuery;
         tableQuery = String.format("select wins from management where username = '%s'", username);
-        ResultSet resultSet = statement.executeQuery(query);
+        ResultSet resultSet = statement.executeQuery(tableQuery);
         return resultSet.getInt(1);
       }
       catch (SQLException e){
