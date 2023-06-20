@@ -1,15 +1,13 @@
 package org.app.utils;
 
-import javax.swing.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.Random;
 import java.util.Scanner;
 public class Model {
 private final int versuche=10;
 private int fails=0;
-private Spieler player;
+private Spieler player = GUI.getSpieler();
    private String siegwort;
     ArrayList<String> woerter = new ArrayList<String>();
 
@@ -21,18 +19,8 @@ private Spieler player;
 
 
     //beispielwörter
-    private void initWords(){
-        woerter.add("Toast");
-        woerter.add("Apfel");
-        woerter.add("test");
-        woerter.add("Zaun");
-        woerter.add("Fisch");
-        woerter.add("Wort");
-        woerter.add("Dinosaurier");
-        woerter.add("Huhn");
-        woerter.add("Jacke");
-        woerter.add("Frosch");
-        woerter.add("Bett");
+    public void initWords(){
+        woerter= new SQLiteConnection().getWordsFromTable();
     }
 
     public void setFails(int fails) {
@@ -73,7 +61,7 @@ public void nochmalSpielen() throws SQLException {
     System.out.println("möchtest du nochmal spielen? (J/N)");
     input=scanner.nextLine();
     if (input.equalsIgnoreCase("j")||input.equalsIgnoreCase("ja")){
-        firstEzGame(player);
+        Game(player);
 
     }
     else if (input.equalsIgnoreCase("n")||input.equalsIgnoreCase("nein")){
@@ -127,7 +115,7 @@ public void fail() throws SQLException {
 }
 
 //spiel
-public void firstEzGame(Spieler spieler) throws SQLException {
+public void Game(Spieler spieler) throws SQLException {
         player=spieler;
         setFails(0);
     Random rand = new Random();
@@ -140,7 +128,7 @@ public void firstEzGame(Spieler spieler) throws SQLException {
 
     //füllt das Testwort mit platzhalter Werten
     for (int i = 0; i < siegwort.length(); i++) {
-        tempWord.add("-");
+        tempWord.add("_");
 
     }
 
@@ -148,7 +136,7 @@ public void firstEzGame(Spieler spieler) throws SQLException {
     while (fails<10){
         System.out.println("Übrige Versuche: "+(versuche-fails));
         for (int i = 0; i < tempWord.size(); i++) {
-            if (tempWord.contains("-")){
+            if (tempWord.contains("_")){
             System.out.print(tempWord.get(i)+" ");}
             else{ Victory(); return;}
 
