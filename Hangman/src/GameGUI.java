@@ -20,6 +20,7 @@ public class GameGUI extends JFrame implements ActionListener {
   JMenuItem deleteAccountMenuItem = new JMenuItem("Account löschen");
   JMenuItem addWordMenuItem = new JMenuItem("Wort hinzufügen");
   JMenuItem removeWordItem = new JMenuItem("Wort löschen (admin)");
+  // TODO: logoutMennuItem
   SQLiteConnection sqLiteConnection;
   boolean hasAdminPermission;
 
