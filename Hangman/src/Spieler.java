@@ -10,17 +10,19 @@ public class Spieler {
 
     private String Username;
     private String Password;
-    private int wins=0;
-    private int losses=0;
+    private int wins;
+    private int losses;
     private int games=wins+losses;//anzahl der Spiele.Kannst du eigentlich so in der datenbank übernehmen mit der Summe aus wins+losses
 
     SQLiteConnection sqLiteConnection = new SQLiteConnection();
 
 
 
-    public Spieler(String username, String password) {
+    public Spieler(String username, String password, int wins, int losses) {
         Username = username;
         Password = password;
+        this.wins = wins;
+        this.losses = losses;
         //SPIELER IN DER DATENBANK HIER ERSTELLEN!
 
         // Hier wird überprüft, ob in der Datenbank schon ein User mit dem Usernamen vorhanden ist. Wenn er es
