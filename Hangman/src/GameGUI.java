@@ -89,11 +89,7 @@ public class GameGUI extends JFrame implements ActionListener {
   public void actionPerformed(ActionEvent e){
     System.out.println(e.getActionCommand());
     sqLiteConnection = new SQLiteConnection();
-    try {
-      Thread.sleep(1000);
-    } catch (InterruptedException ex) {
-      throw new RuntimeException(ex);
-    }
+    
 
     // Show statistics of the player
     if(e.getSource().equals(statisticsMenuItem)){
