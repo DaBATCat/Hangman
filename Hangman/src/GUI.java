@@ -93,8 +93,6 @@ public class GUI extends JFrame implements ActionListener, GUIinterface{
           spieler = new Spieler(usernameText, passwordText.toString(),0,0);
           dispose();
           runGame();
-          model = new Model();
-          model.Game(spieler);
         }
         else{
           JOptionPane.showMessageDialog(this, "Username oder Passwort ist falsch");
@@ -126,37 +124,32 @@ public class GUI extends JFrame implements ActionListener, GUIinterface{
     // Final step of creating a new user
     if(e.getSource().equals(registerFinalButton)) {
       System.out.println(e.getActionCommand());
-      try {
-        // Check if the user is not registered in the database and
-        // usernameText & passwordText have a higher length than 1 and
-        // check if the password is secure
-        if (!sqLiteConnection.userIsRegistered(usernameText) && usernameText.length() >= 1
-                && passwordText.toString().length() >= 1
-                && PasswordSecurityChecker.passwordIsSecure(passwordText.toString())) {
-          spieler = new Spieler(usernameText, passwordText.toString(),0,0);
-          sqLiteConnection.printTable(SQLiteConnection.Table.MANAGEMENT);
-          dispose();
-          runGame();
-          model = new Model();
-          model.Game(spieler);
+      // Check if the user is not registered in the database and
+      // usernameText & passwordText have a higher length than 1 and
+      // check if the password is secure
+      if (!sqLiteConnection.userIsRegistered(usernameText) && usernameText.length() >= 1
+              && passwordText.toString().length() >= 1
+              && PasswordSecurityChecker.passwordIsSecure(passwordText.toString())) {
+        spieler = new Spieler(usernameText, passwordText.toString(),0,0);
+        sqLiteConnection.printTable(SQLiteConnection.Table.MANAGEMENT);
+        dispose();
+        runGame();
 
-        }
-        else if(usernameText.length() == 0){
-          JOptionPane.showMessageDialog(this, "Dein Benutzername muss mindestens 1 Character lang sein.");
-        }
-        else if(passwordText.toString().length() == 0){
-          JOptionPane.showMessageDialog(this, "Dein Passwort ist zu kurz.");
-        }
-        else if( !PasswordSecurityChecker.passwordIsSecure(passwordText.toString())){
-          JOptionPane.showMessageDialog(this, String.format("Dein Passwort ist zu unsicher. Bitte verwende mindestens 5 " +
-                  "Zeichen, mindestens einen Groß- und Kleinbuchstaben, eine Zahl sowie " +
-                  "mindestens eins dieser Sonderzeichen: [ %s ]", PasswordSecurityChecker.allowedChars()));
-        }
-        else{
-          JOptionPane.showMessageDialog(this, "Dieser Username ist bereits vergeben.");
-        }
-      } catch (SQLException exception) {
-        exception.printStackTrace();
+
+      }
+      else if(usernameText.length() == 0){
+        JOptionPane.showMessageDialog(this, "Dein Benutzername muss mindestens 1 Character lang sein.");
+      }
+      else if(passwordText.toString().length() == 0){
+        JOptionPane.showMessageDialog(this, "Dein Passwort ist zu kurz.");
+      }
+      else if( !PasswordSecurityChecker.passwordIsSecure(passwordText.toString())){
+        JOptionPane.showMessageDialog(this, String.format("Dein Passwort ist zu unsicher. Bitte verwende mindestens 5 " +
+                "Zeichen, mindestens einen Groß- und Kleinbuchstaben, eine Zahl sowie " +
+                "mindestens eins dieser Sonderzeichen: [ %s ]", PasswordSecurityChecker.allowedChars()));
+      }
+      else{
+        JOptionPane.showMessageDialog(this, "Dieser Username ist bereits vergeben.");
       }
     }
 

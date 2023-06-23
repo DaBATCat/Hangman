@@ -1,5 +1,6 @@
 package org.app.utils;
 
+import javax.swing.*;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Random;
@@ -7,14 +8,21 @@ import java.util.Scanner;
 public class Model {
 private final int versuche=10;
 private int fails=0;
+private GameGUI gameGUI;
 private Spieler player = GUI.getSpieler();
-   private String siegwort;
+
+    public String getSiegwort() {
+        return siegwort;
+    }
+
+    public String siegwort;
     ArrayList<String> woerter = new ArrayList<String>();
 
 
 
-    public Model() {
+    public Model(GameGUI gameGUI) {
         initWords();
+        this.gameGUI = gameGUI;
     }
 
 
@@ -28,19 +36,8 @@ private Spieler player = GUI.getSpieler();
     }
 
     //Wort eingabe Methode
-    public String inputWort(){
-        Scanner scanner = new Scanner(System.in);
-        String wort="";
-
-        //verbietet, dass man ein leeres Wort eingibt und fehler verursacht
-        do {
-            System.out.println("gib ein Wort oder einen Buchstaben  ein");
-             wort = scanner.nextLine();
-        } while (wort.length()==0);
-
-        System.out.println("eingegebenes Wort: " + wort);
-
-        return wort;
+    public String inputWort(JTextField textField){
+        return  textField.getText();
     }
 
 //überprüft ob das eingegebene Wort das gesuchte Wort ist
@@ -61,7 +58,7 @@ public void nochmalSpielen() throws SQLException {
     System.out.println("möchtest du nochmal spielen? (J/N)");
     input=scanner.nextLine();
     if (input.equalsIgnoreCase("j")||input.equalsIgnoreCase("ja")){
-        Game(player);
+        //Game(player);
 
     }
     else if (input.equalsIgnoreCase("n")||input.equalsIgnoreCase("nein")){
@@ -114,8 +111,16 @@ public void fail() throws SQLException {
     nochmalSpielen();
 }
 
+public String getChosenWord(){
+    Random rand = new Random();
+    int nr=rand.nextInt(woerter.size()-1);
+    ArrayList<String> tempWord=new ArrayList<>();
+    this.siegwort = woerter.get(nr);
+    return siegwort;
+}
+
 //spiel
-public void Game(Spieler spieler) throws SQLException {
+public void game(Spieler spieler, JLabel label) throws SQLException {
         player=spieler;
         setFails(0);
     Random rand = new Random();
@@ -124,13 +129,14 @@ public void Game(Spieler spieler) throws SQLException {
 
     //wählt zufälliges wort aus der Liste mit den Beispielwörtern
     siegwort = woerter.get(nr);
-    System.out.println("finde das Wort:");
+    // label.setText("Finde das Wort:");
 
     //füllt das Testwort mit platzhalter Werten
     for (int i = 0; i < siegwort.length(); i++) {
         tempWord.add("_");
 
     }
+    label.setText(tempWord.toString());
 
 
     while (fails<10){
@@ -141,7 +147,7 @@ public void Game(Spieler spieler) throws SQLException {
             else{ Victory(); return;}
 
         }
-        String inputWort=inputWort();
+        String inputWort=inputWort(new JTextField());
         if (inputWort.length()>1){
 
             if (WortCheck(inputWort,siegwort)){
@@ -177,6 +183,41 @@ public void Game(Spieler spieler) throws SQLException {
 
 }
 
+public boolean inheritsChar(JTextField textField){
+    ArrayList<String> tempWord=new ArrayList<>();
+    System.out.println("siegword: " + siegwort);
+    for(int i = 0; i < siegwort.length(); i++){
+        tempWord.add("");
+    }
+    String inputWort=inputWort(textField);
+
+
+    ArrayList<Integer> buchstabenPos = new ArrayList<>();
+    buchstabenPos=Buchstabencheck(inputWort,siegwort);
+    if (!buchstabenPos.isEmpty()){
+        for(int i = 0; i < buchstabenPos.size(); i++){
+            tempWord.set(buchstabenPos.get(i), inputWort);
+        }
+        // System.out.println("BUCHSTABE IST DABEI");
+        // for (int i = 0; i < buchstabenPos.size(); i++) {
+        //     tempWord.set(buchstabenPos.get(i),inputWort);
+
+        // }
+        // StringBuilder text = new StringBuilder();
+        // for(int i = 0; i < tempWord.size(); i++){
+        //     text.append(tempWord.get(i));
+        // }
+        // gameGUI.setSearchedWordLabel(text.toString());
+        return true;
+    }
+    else{
+        System.out.println("DER BUCHSTABE IST ES NICHT!");
+        fails++;
+    }
+
+
+    return false;
+}
 
 
 //test Methode

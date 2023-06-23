@@ -4,6 +4,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class GameGUI extends JFrame implements ActionListener {
   Container container = getContentPane();
@@ -13,7 +16,7 @@ public class GameGUI extends JFrame implements ActionListener {
   JLabel triesLabel = new JLabel("Versuche:");
   JLabel triesCountLabel = new JLabel("10/10");
   JLabel searchedWordLabel = new JLabel("");
-  Model model = new Model();
+  Model model;
   JMenuBar menuBar = new JMenuBar();
   JMenu menu = new JMenu("Menü");
   JMenuItem statisticsMenuItem = new JMenuItem("Statistiken");
@@ -21,8 +24,13 @@ public class GameGUI extends JFrame implements ActionListener {
   JMenuItem addWordMenuItem = new JMenuItem("Wort hinzufügen");
   JMenuItem removeWordItem = new JMenuItem("Wort löschen (admin)");
   // TODO: logoutMennuItem
+  JTextField guessedWordTextField = new JTextField("");
   SQLiteConnection sqLiteConnection;
   boolean hasAdminPermission;
+  boolean gameIsRunning;
+  int tries;
+  ArrayList<Character> finalWordChar;
+  boolean[] charIsSet;
 
 
   public void setSpieler(Spieler spieler) {
@@ -36,10 +44,11 @@ public class GameGUI extends JFrame implements ActionListener {
     }
   }
 
-  public GameGUI() throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+  public GameGUI() throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException, SQLException {
     hasAdminPermission = false;
     initImagePaths();
     initWords();
+    model = new Model(this);
 
     setupImage();
     setLayoutManager();
@@ -48,13 +57,35 @@ public class GameGUI extends JFrame implements ActionListener {
     addActionEvent();
 
     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+
+    runGame();
+  }
+  public void runGame() throws SQLException {
+    gameIsRunning = true;
+    model.initWords();
+    tries = 0;
+
+    // Set up the placeholder text in the label
+    StringBuilder placeHolder;
+    placeHolder = new StringBuilder();
+    placeHolder.append("_".repeat(Math.max(0, model.getChosenWord().length() - 1)));
+    placeHolder.append("_");
+    String placeHolderResult = placeHolder.toString();
+    searchedWordLabel.setText(placeHolderResult);
+    setSearchedWordLabel(searchedWordLabel.getText().length());
+    finalWordChar = new ArrayList<>();
+    charIsSet = new boolean[model.getSiegwort().length()];
+    // searchedWordLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+    // while(gameIsRunning){
+    //   model.game(spieler, searchedWordLabel);
+    // }
   }
 
   public void setupImage(){
     // Setting up the Image and its location
     imageIcon = new ImageIcon(imagePaths[0]);
     imageLabel.setIcon(imageIcon);
-    imageLabel.setBounds(10,250,200,100);
+    imageLabel.setBounds(90,40,200,100);
     imageLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
   }
   public void setLayoutManager(){
@@ -66,11 +97,66 @@ public class GameGUI extends JFrame implements ActionListener {
     triesLabel.setBounds(270, 250, 70, 10);
     triesCountLabel.setBounds(275, 270, 100, 50);
     triesCountLabel.setFont(new Font("Arial", Font.BOLD, 20));
+    guessedWordTextField.setBounds(30, 250, 100, 50);
+    guessedWordTextField.setFont(new Font("Arial", Font.BOLD, 15));
+    guessedWordTextField.setBorder(
+            BorderFactory.createTitledBorder(
+                    BorderFactory.createLineBorder(Color.BLACK),
+                    "Texteingabe: "));
+  }
+
+  public void setSearchedWordLabel(ArrayList<String> text){
+    char[] characters = searchedWordLabel.getText().toCharArray();
+    ArrayList<Character> chars = new ArrayList<>();
+    for(int i = 0; i < characters.length; i++){
+      chars.add(characters[i]);
+    }
+    // StringBuilder result = new StringBuilder();
+    // for(int i = 0; i < model.getSiegwort().length(); i++){
+    //   if(i > 0 && i % 2 != 0) result.append(" ");
+    //   else if()
+    // }
+    for(int i = 0; i < model.getSiegwort().length(); i++){
+
+    }
+    System.out.println("TEST " + text);
+    // String a = "";
+    // for(int i = 0; i < text.size(); i++){
+    //   if(text.get(i) != "_"){
+    //     finalWordChar[i] = text.get(i).charAt(0);
+    //   }
+    //   a += text.get(i) + "_ ";
+    // }
+    // this.searchedWordLabel.setText(finalWordChar.toString());
+
+    // for(int i = 0; i < tempWord.size(); i++){
+    //   if(!Objects.equals(tempWord.get(i), " ")){
+    //     toAddText.append(tempWord.get(i));
+    //   }
+    //   else if (Objects.equals(tempWord.get(i), "_")){
+    //     toAddText.append(currentText.charAt(i) + " ");
+    //   }
+    //   else{
+    //     toAddText.append(tempWord.get(i));
+    //   }
+    // }
+  }
+  public void setText(String text){
+
+  }
+
+  // Automatically sets the size of the label based on
+  // the length of the chosen word (not accurate)
+  public void setSearchedWordLabel(int WIDTH_MULTIPLIER){
+    searchedWordLabel.setBounds(90,170,WIDTH_MULTIPLIER * 12,40);
+    searchedWordLabel.setFont(new Font("Arial", Font.BOLD, 20));
   }
   public void addComponentsToContainer(){
     container.add(imageLabel);
     container.add(triesLabel);
     container.add(triesCountLabel);
+    container.add(searchedWordLabel);
+    container.add(guessedWordTextField);
     // Upper menu components
     menu.add(statisticsMenuItem);
     menu.add(deleteAccountMenuItem);
@@ -84,13 +170,40 @@ public class GameGUI extends JFrame implements ActionListener {
     addWordMenuItem.addActionListener(this);
     deleteAccountMenuItem.addActionListener(this);
     statisticsMenuItem.addActionListener(this);
+    guessedWordTextField.addActionListener(this);
   }
 
   @Override
   public void actionPerformed(ActionEvent e){
     System.out.println(e.getActionCommand());
     sqLiteConnection = new SQLiteConnection();
-    
+
+
+    // If the player presses Enter
+    if(e.getSource().equals(guessedWordTextField)){
+      try{
+        System.out.println("Siegwort: " + model.getSiegwort());
+
+        // if the written word equals the searched word
+        if(guessedWordTextField.getText().equalsIgnoreCase(model.getSiegwort())){
+          this.searchedWordLabel.setText(model.getSiegwort());
+          sqLiteConnection.incrementWins(spieler.getUsername());
+        }
+        else if(model.inheritsChar(guessedWordTextField) &&
+                guessedWordTextField.getText().length() == 1){
+          System.out.println("Char is in!");
+          for(int i = 0; i < model.getSiegwort().length(); i++){
+            if(guessedWordTextField.getText().charAt(0) == model.getSiegwort().charAt(0)){
+              charIsSet[i] = true;
+            }
+          }
+        }
+
+      }
+      catch (Exception exception){
+        exception.printStackTrace();
+      }
+    }
 
     // Show statistics of the player
     if(e.getSource().equals(statisticsMenuItem)){
@@ -175,7 +288,7 @@ public class GameGUI extends JFrame implements ActionListener {
     }
   }
 
-  public static void main(String[] args) throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+  public static void main(String[] args) throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException, SQLException {
     GameGUI gameGUI = new GameGUI();
     gameGUI.setTitle("Hangman");
     gameGUI.setVisible(true);

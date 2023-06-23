@@ -37,9 +37,9 @@ public class SQLiteConnection {
           // System.out.println(new SQLiteConnection().passwordEqualsWithUsername("Daniel", "penis1"));
           // new SQLiteConnection().executeSimpleQuery();
 
-          new SQLiteConnection().executeSimpleQuery("delete from management where " +
-                  "username = 'Daniel'");
-
+          // new SQLiteConnection().executeSimpleQuery("delete from management where " +
+          //         "username = 'Daniel'");
+          new SQLiteConnection().printWords(connection);
         }
     catch (SQLException e){
           printtln("Error!");
