@@ -6,6 +6,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
@@ -46,10 +48,10 @@ public class GameGUI extends JFrame implements ActionListener {
   }
 
   public GameGUI() throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException, SQLException {
+    printtln("Main GUI is being created");
     tries = 10;
     hasAdminPermission = false;
     initImagePaths();
-    initWords();
     model = new Model(this);
 
     setupImage();
@@ -60,10 +62,11 @@ public class GameGUI extends JFrame implements ActionListener {
     setCurrentImage();
 
     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-
+    printtln("Main GUI is fully configured and running the game now");
     runGame();
   }
   public void runGame() throws SQLException {
+    printtln("Loop game started");
     setCurrentImage();
     triesCountLabel.setText(tries + "/10");
     guessedWordTextField.setText("");
@@ -81,10 +84,7 @@ public class GameGUI extends JFrame implements ActionListener {
     finalWordChar = new ArrayList<>();
     charList = new char[model.getSiegwort().length()];
     Arrays.fill(charList, '_');
-    // searchedWordLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-    // while(gameIsRunning){
-    //   model.game(spieler, searchedWordLabel);
-    // }
+    printtln("A word is chosen and ready for guessing");
   }
 
   public void setupImage(){
@@ -98,6 +98,7 @@ public class GameGUI extends JFrame implements ActionListener {
   public void setCurrentImage(){
     imageIcon = new ImageIcon(imagePaths[Math.abs(this.tries-10)]);
     imageLabel.setIcon(imageIcon);
+    printtln("Image ist being updated to stage " + Math.abs(this.tries-10));
   }
   public void setLayoutManager(){
     container.setLayout(null);
@@ -116,45 +117,6 @@ public class GameGUI extends JFrame implements ActionListener {
                     "Texteingabe: "));
   }
 
-  public void setSearchedWordLabel(ArrayList<String> text){
-    char[] characters = searchedWordLabel.getText().toCharArray();
-    ArrayList<Character> chars = new ArrayList<>();
-    for(int i = 0; i < characters.length; i++){
-      chars.add(characters[i]);
-    }
-    // StringBuilder result = new StringBuilder();
-    // for(int i = 0; i < model.getSiegwort().length(); i++){
-    //   if(i > 0 && i % 2 != 0) result.append(" ");
-    //   else if()
-    // }
-    for(int i = 0; i < model.getSiegwort().length(); i++){
-
-    }
-    System.out.println("TEST " + text);
-    // String a = "";
-    // for(int i = 0; i < text.size(); i++){
-    //   if(text.get(i) != "_"){
-    //     finalWordChar[i] = text.get(i).charAt(0);
-    //   }
-    //   a += text.get(i) + "_ ";
-    // }
-    // this.searchedWordLabel.setText(finalWordChar.toString());
-
-    // for(int i = 0; i < tempWord.size(); i++){
-    //   if(!Objects.equals(tempWord.get(i), " ")){
-    //     toAddText.append(tempWord.get(i));
-    //   }
-    //   else if (Objects.equals(tempWord.get(i), "_")){
-    //     toAddText.append(currentText.charAt(i) + " ");
-    //   }
-    //   else{
-    //     toAddText.append(tempWord.get(i));
-    //   }
-    // }
-  }
-  public void setText(String text){
-
-  }
   public void setSearchedWordLabel(){
     searchedWordLabel.setBounds(90,170,300,40);
     searchedWordLabel.setFont(new Font("Arial", Font.BOLD, 20));
@@ -172,6 +134,7 @@ public class GameGUI extends JFrame implements ActionListener {
     menu.add(removeWordItem);
     menuBar.add(menu);
     setJMenuBar(menuBar);
+    printtln("All components added to the container");
   }
   public void addActionEvent(){
     removeWordItem.addActionListener(this);
@@ -183,7 +146,7 @@ public class GameGUI extends JFrame implements ActionListener {
 
   @Override
   public void actionPerformed(ActionEvent e){
-    System.out.println(e.getActionCommand());
+    printtln("Action performed: " + e.getActionCommand());
 
     // If the player wants to delete his account
     if(e.getSource().equals(deleteAccountMenuItem)){
@@ -196,7 +159,7 @@ public class GameGUI extends JFrame implements ActionListener {
 
       sqLiteConnection = new SQLiteConnection();
       try{
-        System.out.println("Siegwort: " + model.getSiegwort());
+        System.out.println("\u001B[31m" + "Cheating: " + model.getSiegwort() + "\u001B[0m");
 
         // if the written word equals the searched word
         if(guessedWordTextField.getText().equalsIgnoreCase(model.getSiegwort())){
@@ -215,9 +178,7 @@ public class GameGUI extends JFrame implements ActionListener {
             char a = model.getSiegwort().toLowerCase().charAt(i);
             if(c == a){
               charList[i] = c;
-            }
-            else{
-              System.out.println("not true");
+              printtln("Character matches at position " + i);
             }
           }
 
@@ -230,20 +191,17 @@ public class GameGUI extends JFrame implements ActionListener {
             else toSetText.append("_");
           }
           searchedWordLabel.setText(toSetText.toString());
+          printtln("The displayed text has been updated");
+          printtln("It is checked if the word matches with the searched so far");
           if(counter == model.getSiegwort().length())
           {
+            printtln("The word matches!");
             JOptionPane.showMessageDialog(this, "Du hast das Wort erraten!");
+            printtln("Incrementing wins and running the game");
             tries = 10;
             incrementWins();
             runGame();
           }
-
-          // new GameGUI();
-          // for(int i = 0; i < model.getSiegwort().length(); i++){
-          //   if(guessedWordTextField.getText().charAt(0) == model.getSiegwort().charAt(0)){
-          //     charList[i] = guessedWordTextField.toString();
-          //   }
-          // }
         }
         else if(guessedWordTextField.getText().length() == 0){return;}
         else{
@@ -317,7 +275,9 @@ public class GameGUI extends JFrame implements ActionListener {
   }
 
   public void initFail(){
+    printtln("The user tipped a wrong character");
     if (this.tries >= 2){
+      printtln("Decrementing tries and updating the image");
       this.tries -= 1;
       triesCountLabel.setText(tries + "/10");
       setCurrentImage();
@@ -329,6 +289,7 @@ public class GameGUI extends JFrame implements ActionListener {
 
   public void initTotalFail(){
     tries--;
+    printtln("The user lost with the last try. Setting up the default game again");
     setCurrentImage();
     incrementGamesPlayed();
     try{
@@ -364,6 +325,7 @@ public class GameGUI extends JFrame implements ActionListener {
   }
   // Appears if the user had the admin password
   public void removeWordPermission(){
+    printtln("Remove words Window with admin permission");
     hasAdminPermission = true;
     String removedWantedWord = JOptionPane.showInputDialog("Gib hier ein Wort ein, das gelöscht werden soll:");
     // Check, if the given word is in the database
@@ -384,6 +346,7 @@ public class GameGUI extends JFrame implements ActionListener {
     else removeWordPermission();
   }
   public void showAddWord(){
+    printtln("Menu for adding words");
     String suggestedWord = JOptionPane.showInputDialog("Gib hier ein neues Wort ein:");
     // If the suggested word has minimum of 2 chars
     // and the word is not already defined in the database
@@ -406,18 +369,20 @@ public class GameGUI extends JFrame implements ActionListener {
   }
   public void showStatistics(){
     String stats;
+    printtln("Stats will be taken from the DB and displayed");
     String username = GUI.getSpieler().getUsername();
     stats = "Deine Statistiken:\n" +
             "• Name: " + username + "\n"+
             "• Spiele insgesamt: " + sqLiteConnection.getGamesPlayed(username) + "\n" +
-            "• Spiele gewonnen: " + sqLiteConnection.getWins(username) + "\n" +
-            "• Spiele verloren: " + sqLiteConnection.getLosses(username) + "\n";
+            "• Spiele gewonnen: "  + sqLiteConnection.getWins(username) + "\n" +
+            "• Spiele verloren: "  + sqLiteConnection.getLosses(username) + "\n"+
+            "• Siegesquote: "      + ((int) (((double) sqLiteConnection.getWins(username)/
+            (sqLiteConnection.getWins(username) +
+                    sqLiteConnection.getLosses(username))*100)*100))/100d + "%";
     JOptionPane.showMessageDialog(this, stats);
   }
-  public void initWords(){
-    //TODO: Jlabel searchedWordLabel in central display, JMenu for stats & options
-  }
   public void createPasswordGUI(){
+    printtln("Password GUI will be created");
     try{
       PasswordGUI passwordGUI = new PasswordGUI(this);
       passwordGUI.setTitle("Passwort erforderlich");
@@ -442,4 +407,10 @@ public class GameGUI extends JFrame implements ActionListener {
     gameGUI.setResizable(false);
   }
 
+  private static void printtln(String defaultText){
+    LocalDateTime localDateTime = LocalDateTime.now();
+    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
+    String formattedDate = localDateTime.format(dateTimeFormatter);
+    System.out.println("\u001B[32m" + "DB[" + formattedDate + "] " + defaultText + "\u001B[0m");
+  }
 }
