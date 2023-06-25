@@ -10,7 +10,7 @@ import java.util.Arrays;
 
 public class GameGUI extends JFrame implements ActionListener {
   Container container = getContentPane();
-  String[] imagePaths = new String[10];
+  String[] imagePaths = new String[11];
   ImageIcon imageIcon;
   JLabel imageLabel = new JLabel();
   JLabel triesLabel = new JLabel("Versuche:");
@@ -40,11 +40,12 @@ public class GameGUI extends JFrame implements ActionListener {
   Spieler spieler;
   private void initImagePaths(){
     for(int i = 0; i < 10; i++){
-      imagePaths[i] = "Hangman/Images/Progress" + (i+1) + ".png";
+      imagePaths[i] = "Hangman/Images/Progress" + (i) + ".png";
     }
   }
 
   public GameGUI() throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException, SQLException {
+    tries = 10;
     hasAdminPermission = false;
     initImagePaths();
     initWords();
@@ -55,15 +56,18 @@ public class GameGUI extends JFrame implements ActionListener {
     setLocationAndSize();
     addComponentsToContainer();
     addActionEvent();
+    setCurrentImage();
 
     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 
     runGame();
   }
   public void runGame() throws SQLException {
+    setCurrentImage();
+    triesCountLabel.setText(tries + "/10");
+    guessedWordTextField.setText("");
     gameIsRunning = true;
     model.initWords();
-    tries = 0;
 
     // Set up the placeholder text in the label
     StringBuilder placeHolder;
@@ -88,6 +92,11 @@ public class GameGUI extends JFrame implements ActionListener {
     imageLabel.setIcon(imageIcon);
     imageLabel.setBounds(90,40,200,100);
     imageLabel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+  }
+
+  public void setCurrentImage(){
+    imageIcon = new ImageIcon(imagePaths[Math.abs(this.tries-10)]);
+    imageLabel.setIcon(imageIcon);
   }
   public void setLayoutManager(){
     container.setLayout(null);
@@ -179,6 +188,7 @@ public class GameGUI extends JFrame implements ActionListener {
 
     // If the player presses Enter
     if(e.getSource().equals(guessedWordTextField)){
+
       sqLiteConnection = new SQLiteConnection();
       try{
         System.out.println("Siegwort: " + model.getSiegwort());
@@ -186,15 +196,18 @@ public class GameGUI extends JFrame implements ActionListener {
         // if the written word equals the searched word
         if(guessedWordTextField.getText().equalsIgnoreCase(model.getSiegwort())){
           this.searchedWordLabel.setText(model.getSiegwort());
-          sqLiteConnection.incrementWins(spieler.getUsername());
+          JOptionPane.showMessageDialog(this, "Du hast das Wort erraten!");
+          tries = 10;
+          incrementWins();
+          runGame();
+
         }
         // If a char matches
         else if(model.inheritsChar(guessedWordTextField) &&
                 guessedWordTextField.getText().length() == 1){
-          char c = guessedWordTextField.getText().toLowerCase().charAt(0) ;
+          char c = guessedWordTextField.getText().toLowerCase().charAt(0);
           for(int i = 0; i < charList.length; i++){
             char a = model.getSiegwort().toLowerCase().charAt(i);
-            System.out.println("C: " + c + " A: " + a);
             if(c == a){
               charList[i] = c;
             }
@@ -203,34 +216,43 @@ public class GameGUI extends JFrame implements ActionListener {
             }
           }
 
-          String toSetText = "";
+          StringBuilder toSetText = new StringBuilder();
           int counter = 0;
           for(int i = 0; i < model.getSiegwort().length(); i++){
             if(charList[i] != '_'){
-              toSetText += model.getSiegwort().charAt(i);
+              toSetText.append(model.getSiegwort().charAt(i));
               counter++; }
-            else toSetText += "_";
+            else toSetText.append("_");
           }
-          searchedWordLabel.setText(toSetText);
+          searchedWordLabel.setText(toSetText.toString());
           if(counter == model.getSiegwort().length())
           {
             JOptionPane.showMessageDialog(this, "Du hast das Wort erraten!");
+            tries = 10;
             incrementWins();
             runGame();
           }
 
-          new GameGUI();
+          // new GameGUI();
           // for(int i = 0; i < model.getSiegwort().length(); i++){
           //   if(guessedWordTextField.getText().charAt(0) == model.getSiegwort().charAt(0)){
           //     charList[i] = guessedWordTextField.toString();
           //   }
           // }
         }
+        else if(guessedWordTextField.getText().length() == 0){return;}
+        else{
+          initFail();
+        }
 
       }
       catch (Exception exception){
         exception.printStackTrace();
       }
+
+
+
+      guessedWordTextField.setText("");
     }
 
     // Show statistics of the player
@@ -254,7 +276,43 @@ public class GameGUI extends JFrame implements ActionListener {
     sqLiteConnection.closeConnection();
   }
 
+  public void initFail(){
+    if (this.tries >= 2){
+      this.tries -= 1;
+      triesCountLabel.setText(tries + "/10");
+      setCurrentImage();
+    }
+    else{
+      initTotalFail();
+    }
+  }
+
+  public void initTotalFail(){
+    tries--;
+    setCurrentImage();
+    incrementGamesPlayed();
+    try{
+      JOptionPane.showMessageDialog(this, "Du hast verloren! Das Wort war: " + model.getSiegwort());
+      new SQLiteConnection().incrementLosses(spieler.getUsername());
+      tries = 10;
+      triesCountLabel.setText(tries + "/10");
+      runGame();
+    }
+    catch (SQLException e){
+      e.printStackTrace();
+    }
+  }
+
+  public void incrementGamesPlayed(){
+    try{
+      new SQLiteConnection().incrementGamesPlayed(spieler.getUsername());
+    }
+    catch (SQLException e){
+      e.printStackTrace();
+    }
+  }
   public void incrementWins(){
+    incrementGamesPlayed();
     try{
       new SQLiteConnection().incrementWins(spieler.getUsername());
       // sqLiteConnection.incrementWins(spieler.getUsername());

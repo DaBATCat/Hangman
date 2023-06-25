@@ -37,11 +37,7 @@ public class SQLiteConnection {
           // System.out.println(new SQLiteConnection().passwordEqualsWithUsername("Daniel", "penis1"));
           // new SQLiteConnection().executeSimpleQuery();
 
-          // new SQLiteConnection().executeSimpleQuery("delete from management where " +
-          //         "username = 'Daniel'");
-          new SQLiteConnection().incrementWins("Arsch");
-          new SQLiteConnection().printTable(Table.MANAGEMENT);
-          System.out.println(new SQLiteConnection().getWins("Arsch"));
+          new SQLiteConnection().printTable(Table.WORDS);
         }
     catch (SQLException e){
           printtln("Error!");
@@ -70,15 +66,38 @@ public class SQLiteConnection {
  public void removeWord(String word){
       if(wordIsInTable(word)){
         try{
+          connect(url);
           // Setzt das 1. Zeichen im String zu einem Großbuchstaben
           word = word.substring(0,1).toUpperCase() + word.substring(1);
           Statement statement = connection.createStatement();
           String tableQuery;
           tableQuery = String.format("delete from words where word = '%s'", word );
-          statement.executeUpdate(tableQuery);
+          PreparedStatement pst = connection.prepareStatement(tableQuery);
+
+          try(pst){
+            pst.executeUpdate();
+            printtln("Removed Word: " + word);
+          }
+          catch (SQLException e) {
+            e.printStackTrace();
+          }
+          // resultSet.getStatement().executeUpdate(tableQuery);
+          // pst.getResultSet().getStatement().executeUpdate(tableQuery);
+
         }
         catch (SQLException e){
           e.printStackTrace();
+        }
+        finally {
+          if (connection != null){
+            try{
+              connection.close();
+            }
+            catch (SQLException e){
+              e.printStackTrace();
+            }
+
+          }
         }
       }
  }
@@ -113,33 +132,34 @@ public class SQLiteConnection {
 
  // Anzahl der gespielten Spiele zurückgeben
   public int getGamesPlayed(String username){
-      try{
-        String tableQuery;
-        tableQuery = String.format("select spiele from management where username = '%s'", username);
-        Statement statement = connection.createStatement();
-        PreparedStatement pst = connection.prepareStatement(tableQuery);
-        // Statement statement = connection.createStatement();
-        ResultSet resultSet = pst.getResultSet();
-        return resultSet.getInt(1);
-
-
+    try{
+      connect(url);
+      String tableQuery;
+      tableQuery = String.format("select spiele from management where username = '%s'", username);
+      PreparedStatement pst = connection.prepareStatement(tableQuery);
+      ResultSet resultSet = pst.executeQuery();
+      Statement statement = connection.createStatement();
+      if(resultSet.next()){
+        return statement.executeQuery(tableQuery).getInt(1);
       }
-      catch (SQLException e){
-        e.printStackTrace();
-      }
-      finally {
-        if (connection != null){
-          try{
-            connection.close();
+      // resultSet.getStatement().executeUpdate(tableQuery);
+      // pst.getResultSet().getStatement().executeUpdate(tableQuery);
 
-          }
-          catch (SQLException e){
-            e.printStackTrace();
-          }
-
+    }
+    catch (SQLException e){
+      e.printStackTrace();
+    }
+    finally {
+      if (connection != null) {
+        try {
+          connection.close();
+        } catch (SQLException e) {
+          e.printStackTrace();
         }
+
       }
-      return 0;
+    }
+    return 0;
   }
 
   // Anzahl der verlorenen Spiele zurückgeben
@@ -148,22 +168,24 @@ public class SQLiteConnection {
       connect(url);
       String tableQuery;
       tableQuery = String.format("select losses from management where username = '%s'", username);
-      Statement statement = connection.createStatement();
       PreparedStatement pst = connection.prepareStatement(tableQuery);
-      // Statement statement = connection.createStatement();
-      ResultSet resultSet = pst.getResultSet();
-      return resultSet.getInt(1);
+      ResultSet resultSet = pst.executeQuery();
+      Statement statement = connection.createStatement();
+      if(resultSet.next()){
+        return statement.executeQuery(tableQuery).getInt(1);
+      }
+      // resultSet.getStatement().executeUpdate(tableQuery);
+      // pst.getResultSet().getStatement().executeUpdate(tableQuery);
 
     }
     catch (SQLException e){
       e.printStackTrace();
     }
     finally {
-      if (connection != null){
-        try{
+      if (connection != null) {
+        try {
           connection.close();
-        }
-        catch (SQLException e){
+        } catch (SQLException e) {
           e.printStackTrace();
         }
 
@@ -248,11 +270,33 @@ public class SQLiteConnection {
 
 // Erhöhe losses um 1
   public void incrementLosses(String username) throws SQLException {
-    Statement statement = connection.createStatement();
-    String tableQuery;
-    tableQuery = String.format("update management set losses = losses + 1 where username = '%s'", username);
-    statement.executeUpdate(tableQuery);
-    // printtln("Query executed! (" + tableQuery + ")");
+    try{
+      String tableQuery;
+      tableQuery = String.format("update management set losses = losses + 1 where username = '%s'", username);
+      PreparedStatement pst = connection.prepareStatement(tableQuery);
+
+      try(pst){pst.executeUpdate();  }
+      catch (SQLException e) {
+        e.printStackTrace();
+      }
+      // resultSet.getStatement().executeUpdate(tableQuery);
+      // pst.getResultSet().getStatement().executeUpdate(tableQuery);
+
+    }
+    catch (SQLException e){
+      e.printStackTrace();
+    }
+    finally {
+      if (connection != null){
+        try{
+          connection.close();
+        }
+        catch (SQLException e){
+          e.printStackTrace();
+        }
+
+      }
+    }
   }
 
   // Verringere losses um 1
@@ -350,18 +394,37 @@ public class SQLiteConnection {
  public void addWord(String word) {
       try{
         connection = DriverManager.getConnection(url);
+        // First letter is UpperCase
         word = word.substring(0,1).toUpperCase() + word.substring(1);
-        Statement statement = connection.createStatement();
         String tableQuery;
         tableQuery = String.format("insert into words (word) values ('%s')", word);
-        ResultSet resultSet = statement.executeQuery(tableQuery);
-        statement.executeQuery(tableQuery);
-        printtln("Query executed! (" + tableQuery + ")");
-        resultSet.close();
-        connection.close();
+        Statement statement = connection.createStatement();
+        PreparedStatement pst = connection.prepareStatement(tableQuery);
+
+        try(pst){
+          pst.executeUpdate();
+          printtln("Added Word: " + word);
+        }
+        catch (SQLException e) {
+          e.printStackTrace();
+        }
+        // resultSet.getStatement().executeUpdate(tableQuery);
+        // pst.getResultSet().getStatement().executeUpdate(tableQuery);
+
       }
       catch (SQLException e){
         e.printStackTrace();
+      }
+      finally {
+        if (connection != null){
+          try{
+            connection.close();
+          }
+          catch (SQLException e){
+            e.printStackTrace();
+          }
+
+        }
       }
 
  }

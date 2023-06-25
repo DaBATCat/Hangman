@@ -133,7 +133,6 @@ public class GUI extends JFrame implements ActionListener, GUIinterface{
               && passwordText.toString().length() >= 1
               && PasswordSecurityChecker.passwordIsSecure(passwordText.toString())) {
         spieler = new Spieler(usernameText, passwordText.toString(),0,0);
-        sqLiteConnection.printTable(SQLiteConnection.Table.MANAGEMENT);
         dispose();
         runGame();
         sqLiteConnection.closeConnection();
