@@ -1,12 +1,14 @@
 package org.app.utils;
 
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class GameGUI extends JFrame implements ActionListener {
   Container container = getContentPane();
@@ -23,7 +25,6 @@ public class GameGUI extends JFrame implements ActionListener {
   JMenuItem deleteAccountMenuItem = new JMenuItem("Account löschen");
   JMenuItem addWordMenuItem = new JMenuItem("Wort hinzufügen");
   JMenuItem removeWordItem = new JMenuItem("Wort löschen (admin)");
-  // TODO: logoutMennuItem
   JTextField guessedWordTextField = new JTextField("");
   SQLiteConnection sqLiteConnection;
   boolean hasAdminPermission;
@@ -184,6 +185,10 @@ public class GameGUI extends JFrame implements ActionListener {
   public void actionPerformed(ActionEvent e){
     System.out.println(e.getActionCommand());
 
+    // If the player wants to delete his account
+    if(e.getSource().equals(deleteAccountMenuItem)){
+      deleteAccount();
+    }
 
 
     // If the player presses Enter
@@ -274,6 +279,41 @@ public class GameGUI extends JFrame implements ActionListener {
       sqLiteConnection.closeConnection();
     }
     sqLiteConnection.closeConnection();
+  }
+
+  public void deleteAccount(){
+    JPasswordField passwordField = new JPasswordField();
+    int confirmWindow = JOptionPane.showConfirmDialog(null, passwordField, "Bitte gib dein Passwort ein...",
+            JOptionPane.OK_CANCEL_OPTION);
+    StringBuilder pswd = new StringBuilder();
+    for(int i = 0; i < passwordField.getPassword().length; i++){
+      pswd.append(passwordField.getPassword()[i]);
+    }
+    String confirm = pswd.toString();
+    sqLiteConnection = new SQLiteConnection();
+
+    if(confirmWindow == JOptionPane.OK_OPTION){
+      if(sqLiteConnection.passwordIsConfirmed(spieler.getUsername(), confirm)){
+        String secondConfirm = JOptionPane.showInputDialog("Schreibe zur Bestätigung bitte deinen Usernamen ('"
+                + spieler.getUsername() + "') voll aus...");
+        if(Objects.equals(secondConfirm, spieler.getUsername())){
+          new SQLiteConnection().deleteUser(spieler.getUsername());
+          JOptionPane.showMessageDialog(this, "Dein Account wurde gelöscht.");
+          sqLiteConnection.closeConnection();
+          System.exit(0);
+        }
+        else{
+          JOptionPane.showMessageDialog(this, "Der Name stimmt nicht überein.");
+          deleteAccount();
+        }
+      }
+      else{
+        JOptionPane.showMessageDialog(this, "Das Passwort stimmt nicht überein.");
+        deleteAccount();
+      }
+    }
+    sqLiteConnection.closeConnection();
+
   }
 
   public void initFail(){

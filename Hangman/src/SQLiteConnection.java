@@ -37,7 +37,7 @@ public class SQLiteConnection {
           // System.out.println(new SQLiteConnection().passwordEqualsWithUsername("Daniel", "penis1"));
           // new SQLiteConnection().executeSimpleQuery();
 
-          new SQLiteConnection().printTable(Table.WORDS);
+          new SQLiteConnection().printTable(Table.MANAGEMENT);
         }
     catch (SQLException e){
           printtln("Error!");
@@ -49,6 +49,37 @@ public class SQLiteConnection {
       connection.close();
     printtln("Closed connection");
  }
+ public boolean passwordIsConfirmed(String username, String password){
+   try{
+     connect(url);
+     String tableQuery;
+     tableQuery = String.format("select passwort from management where username = '%s'", username);
+     PreparedStatement pst = connection.prepareStatement(tableQuery);
+     ResultSet resultSet = pst.executeQuery();
+     Statement statement = connection.createStatement();
+     if(resultSet.next()){
+       return Objects.equals(statement.executeQuery(tableQuery).getString(1), password);
+     }
+     // resultSet.getStatement().executeUpdate(tableQuery);
+     // pst.getResultSet().getStatement().executeUpdate(tableQuery);
+
+   }
+   catch (SQLException e){
+     e.printStackTrace();
+   }
+   finally {
+     if (connection != null) {
+       try {
+         connection.close();
+       } catch (SQLException e) {
+         e.printStackTrace();
+       }
+
+     }
+   }
+   return false;
+ }
+
 
  public SQLiteConnection() {
    try {
@@ -253,19 +284,41 @@ public class SQLiteConnection {
    // }
     return 0;
     }
-
+//         executeSimpleQuery(String.format("delete from management where username = '%s'", username));
  // Lösche einen User anhand seines Usernames
  public void deleteUser(String username){
-      printtln("User " + username + " is going to be deleted. Old table:");
-      printTable(Table.MANAGEMENT);
-      try{
-        executeSimpleQuery(String.format("delete from management where username = '%s'", username));
-      }
-      catch (SQLException e){
-        e.printStackTrace();
-      }
-   printtln("Deleted user " + username + ", new Table:");
-      printTable(Table.MANAGEMENT);
+      printtln("User " + username + " is going to be deleted.");
+   try{
+     String tableQuery;
+     tableQuery = String.format("delete from management where username = '%s'", username);
+     Statement statement = connection.createStatement();
+     PreparedStatement pst = connection.prepareStatement(tableQuery);
+
+     try(pst){
+       pst.executeUpdate();
+       printtln("User " + username + " has been deleted.");
+     }
+     catch (SQLException e) {
+       e.printStackTrace();
+     }
+     // resultSet.getStatement().executeUpdate(tableQuery);
+     // pst.getResultSet().getStatement().executeUpdate(tableQuery);
+
+   }
+   catch (SQLException e){
+     e.printStackTrace();
+   }
+   finally {
+     if (connection != null){
+       try{
+         connection.close();
+       }
+       catch (SQLException e){
+         e.printStackTrace();
+       }
+
+     }
+   }
  }
 
 // Erhöhe losses um 1
