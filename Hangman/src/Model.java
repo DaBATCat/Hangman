@@ -211,7 +211,6 @@ public boolean inheritsChar(JTextField textField){
         return true;
     }
     else{
-        System.out.println("DER BUCHSTABE IST ES NICHT!");
         fails++;
     }
 

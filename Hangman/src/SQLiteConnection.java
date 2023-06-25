@@ -22,7 +22,7 @@ public class SQLiteConnection {
     }
     // Query für Methoden, bei denen man keine Query übergibt
     static String query = "select * from management";
-    static Connection connection = null;
+    static Connection connection;
 
   // Welche Datenbank wird angesteuert? Wir haben nur die Datenbank hangman.db
     static String url = "jdbc:sqlite:hangman.db"; ;
@@ -39,7 +39,9 @@ public class SQLiteConnection {
 
           // new SQLiteConnection().executeSimpleQuery("delete from management where " +
           //         "username = 'Daniel'");
-          new SQLiteConnection().printWords(connection);
+          new SQLiteConnection().incrementWins("Arsch");
+          new SQLiteConnection().printTable(Table.MANAGEMENT);
+          System.out.println(new SQLiteConnection().getWins("Arsch"));
         }
     catch (SQLException e){
           printtln("Error!");
@@ -50,6 +52,14 @@ public class SQLiteConnection {
       // Datenbankverbindung wird geschlossen
       connection.close();
     printtln("Closed connection");
+ }
+
+ public SQLiteConnection() {
+   try {
+     connect(url);
+   } catch (Exception e) {
+     e.printStackTrace();
+   }
  }
 
  public void createDB() throws SQLException {
@@ -104,15 +114,30 @@ public class SQLiteConnection {
  // Anzahl der gespielten Spiele zurückgeben
   public int getGamesPlayed(String username){
       try{
-        Statement statement = connection.createStatement();
         String tableQuery;
         tableQuery = String.format("select spiele from management where username = '%s'", username);
-        ResultSet resultSet = statement.executeQuery(tableQuery);
+        Statement statement = connection.createStatement();
+        PreparedStatement pst = connection.prepareStatement(tableQuery);
+        // Statement statement = connection.createStatement();
+        ResultSet resultSet = pst.getResultSet();
         return resultSet.getInt(1);
+
 
       }
       catch (SQLException e){
         e.printStackTrace();
+      }
+      finally {
+        if (connection != null){
+          try{
+            connection.close();
+
+          }
+          catch (SQLException e){
+            e.printStackTrace();
+          }
+
+        }
       }
       return 0;
   }
@@ -120,32 +145,92 @@ public class SQLiteConnection {
   // Anzahl der verlorenen Spiele zurückgeben
   public int getLosses(String username){
     try{
-      Statement statement = connection.createStatement();
+      connect(url);
       String tableQuery;
       tableQuery = String.format("select losses from management where username = '%s'", username);
-      ResultSet resultSet = statement.executeQuery(tableQuery);
+      Statement statement = connection.createStatement();
+      PreparedStatement pst = connection.prepareStatement(tableQuery);
+      // Statement statement = connection.createStatement();
+      ResultSet resultSet = pst.getResultSet();
       return resultSet.getInt(1);
+
     }
     catch (SQLException e){
       e.printStackTrace();
     }
-    return 0;
-  }
+    finally {
+      if (connection != null){
+        try{
+          connection.close();
+        }
+        catch (SQLException e){
+          e.printStackTrace();
+        }
+
+      }
+    }
+    return 0;  }
 
 // Anzahl der gewonnenen Spiele zurückgeben
  public int getWins(String username){
-      try{
-        Statement statement = connection.createStatement();
-        String tableQuery;
-        tableQuery = String.format("select wins from management where username = '%s'", username);
-        ResultSet resultSet = statement.executeQuery(tableQuery);
-        return resultSet.getInt(1);
+
+   try{
+     connect(url);
+     String tableQuery;
+     tableQuery = String.format("select wins from management where username = '%s'", username);
+     PreparedStatement pst = connection.prepareStatement(tableQuery);
+      ResultSet resultSet = pst.executeQuery();
+      Statement statement = connection.createStatement();
+      if(resultSet.next()){
+        return statement.executeQuery(tableQuery).getInt(1);
       }
-      catch (SQLException e){
-        e.printStackTrace();
-      }
-      return 0;
- }
+     // resultSet.getStatement().executeUpdate(tableQuery);
+     // pst.getResultSet().getStatement().executeUpdate(tableQuery);
+
+   }
+   catch (SQLException e){
+     e.printStackTrace();
+   }
+   finally {
+     if (connection != null){
+       try{
+         connection.close();
+       }
+       catch (SQLException e){
+         e.printStackTrace();
+       }
+
+     }
+   }
+
+   // try{
+   //   connect(url);
+   //   String tableQuery;
+   //   tableQuery = String.format("select wins from management where username = '%s'", username);
+   //   Statement statement = connection.createStatement();
+   //   PreparedStatement pst = connection.prepareStatement(tableQuery);
+   //   // Statement statement = connection.createStatement();
+   //   ResultSet resultSet = pst.getResultSet();
+   //   System.out.println("Result: " + resultSet.getInt(1));
+   //  return resultSet.getInt(1);
+//
+   // }
+   // catch (SQLException e){
+   //   e.printStackTrace();
+   // }
+   // finally {
+   //   if (connection != null){
+   //     try{
+   //       connection.close();
+   //     }
+   //     catch (SQLException e){
+   //       e.printStackTrace();
+   //     }
+//
+   //   }
+   // }
+    return 0;
+    }
 
  // Lösche einen User anhand seines Usernames
  public void deleteUser(String username){
@@ -181,10 +266,33 @@ public class SQLiteConnection {
 
   // Erhöhe wins um 1
  public void incrementWins(String username) throws SQLException {
-   Statement statement = connection.createStatement();
-   String tableQuery;
-   tableQuery = String.format("update management set wins = wins + 1 where username = '%s'", username);
-   statement.executeUpdate(tableQuery);
+      try{
+        String tableQuery;
+        tableQuery = String.format("update management set wins = wins + 1 where username = '%s'", username);
+        PreparedStatement pst = connection.prepareStatement(tableQuery);
+
+        try(pst){pst.executeUpdate();  }
+        catch (SQLException e) {
+          e.printStackTrace();
+        }
+        // resultSet.getStatement().executeUpdate(tableQuery);
+        // pst.getResultSet().getStatement().executeUpdate(tableQuery);
+
+      }
+      catch (SQLException e){
+        e.printStackTrace();
+      }
+      finally {
+        if (connection != null){
+          try{
+            connection.close();
+          }
+          catch (SQLException e){
+            e.printStackTrace();
+          }
+
+        }
+      }
    // printtln("Query executed! (" + tableQuery + ")");
  }
 
@@ -209,9 +317,11 @@ public class SQLiteConnection {
         while(resultSet.next()){
           usernames.add(resultSet.getString(1));
         }
+        resultSet.close();
         for (String s : usernames) {
           if (Objects.equals(s, username)) return true;
         }
+        resultSet.close();
         return false;
 
       }
@@ -230,6 +340,7 @@ public class SQLiteConnection {
      Statement statement = connection.createStatement();
      ResultSet resultSet = statement.executeQuery(String.format("select passwort from management where username = '%s'", username));
      defaultPassword = resultSet.getString(1);
+     resultSet.close();
      if(defaultPassword.equals(password)) return true;
    }
    return false;
@@ -238,16 +349,21 @@ public class SQLiteConnection {
  // Ein Wort zur Datenbank hinzufügen
  public void addWord(String word) {
       try{
+        connection = DriverManager.getConnection(url);
         word = word.substring(0,1).toUpperCase() + word.substring(1);
         Statement statement = connection.createStatement();
         String tableQuery;
         tableQuery = String.format("insert into words (word) values ('%s')", word);
-        statement.executeUpdate(tableQuery);
+        ResultSet resultSet = statement.executeQuery(tableQuery);
+        statement.executeQuery(tableQuery);
         printtln("Query executed! (" + tableQuery + ")");
+        resultSet.close();
+        connection.close();
       }
       catch (SQLException e){
         e.printStackTrace();
       }
+
  }
 
  // Einen Benutzer erstellen, bzw. ihn der Datenbank hinzufügen
@@ -258,6 +374,7 @@ public class SQLiteConnection {
            "'%s', '%s', 0, 0, 0);", username, password);
    statement.executeUpdate(tableQuery);
    printtln("Query executed! (" + tableQuery + ")");
+   connection.close();
 
  }
 
@@ -278,6 +395,8 @@ public class SQLiteConnection {
         while(resultSet.next()){
           words.add(resultSet.getString(1));
         }
+        resultSet.close();
+        connection.close();
         return words;
 
       }
@@ -338,6 +457,7 @@ public class SQLiteConnection {
           while (resultSet.next()) {
             System.out.println(resultSet.getInt(1) + "\t" + resultSet.getString(2));
           }
+          resultSet.close();
         }
         else{
           tableQuery = "select * from management";
@@ -353,8 +473,10 @@ public class SQLiteConnection {
                     ", losses=" + resultSet.getInt(5));
 
           }
-
+          resultSet.close();
         }
+
+        connection.close();
       }
       catch (SQLException e){
         printtln("Error!");
@@ -373,6 +495,8 @@ public class SQLiteConnection {
     while(resultSet.next()){
       System.out.println(resultSet.getString(1));
     }
+    connection.close();
+
   }
 
   // Alle Wörter als String[] aus der Datenbank
@@ -410,6 +534,16 @@ public class SQLiteConnection {
       statement.executeUpdate(query);
       printtln("Query executed! (" + query + ")");
       //ResultSet resultSet = statement.executeQuery(query);
+    }
+
+    public void closeConnection(){
+      try{
+        connection.close();
+        printtln("Connection closed!");
+      }
+      catch (SQLException e){
+        e.printStackTrace();
+      }
     }
 
 }

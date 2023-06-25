@@ -73,7 +73,6 @@ public class GUI extends JFrame implements ActionListener, GUIinterface{
   }
   @Override
   public void actionPerformed(ActionEvent e) {
-    sqLiteConnection = new SQLiteConnection();
     String usernameText;
     StringBuilder passwordText;
     String passwordTextStr;
@@ -86,6 +85,7 @@ public class GUI extends JFrame implements ActionListener, GUIinterface{
     }
 
     if (e.getSource().equals(loginButton)) {
+      sqLiteConnection = new SQLiteConnection();
 
       try {
         // If the login is successful
@@ -93,6 +93,7 @@ public class GUI extends JFrame implements ActionListener, GUIinterface{
           spieler = new Spieler(usernameText, passwordText.toString(),0,0);
           dispose();
           runGame();
+          sqLiteConnection.closeConnection();
         }
         else{
           JOptionPane.showMessageDialog(this, "Username oder Passwort ist falsch");
@@ -123,6 +124,7 @@ public class GUI extends JFrame implements ActionListener, GUIinterface{
     }
     // Final step of creating a new user
     if(e.getSource().equals(registerFinalButton)) {
+      sqLiteConnection = new SQLiteConnection();
       System.out.println(e.getActionCommand());
       // Check if the user is not registered in the database and
       // usernameText & passwordText have a higher length than 1 and
@@ -134,7 +136,7 @@ public class GUI extends JFrame implements ActionListener, GUIinterface{
         sqLiteConnection.printTable(SQLiteConnection.Table.MANAGEMENT);
         dispose();
         runGame();
-
+        sqLiteConnection.closeConnection();
 
       }
       else if(usernameText.length() == 0){
