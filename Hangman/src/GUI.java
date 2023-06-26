@@ -201,10 +201,3 @@ public void runGame() {
 }
 
 
-
-class Test{
-  public static void main(String[] args) throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
-
-  }
-
-}
