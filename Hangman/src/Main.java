@@ -1,17 +1,19 @@
 package org.app.utils;
 
+import javax.swing.*;
 import java.sql.SQLException;
 
+import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
+
 public class Main {
-  public static void main(String[] args) throws SQLException {
-    // Model model = new Model();
-    // Spieler spieler1 = new Spieler("ja","nein",0,0);
-    // model.Game(GUI.getSpieler());
-    // System.out.println("siegesquote:"+spieler1.getSiegesquote()+"%");
-    // SQLiteConnection sqLiteConnection = new SQLiteConnection();
-    // for(int i = 0; i < sqLiteConnection.getWordsFromTable().size(); i++){
-    //   System.out.println(sqLiteConnection.getWordsFromTable().get(i));
-    // }
+  public static void main(String[] args) throws SQLException, UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
+    GUI gui = new GUI();
+    gui.setTitle("Log In");
+    gui.setVisible(true);
+    gui.setBounds(10,10,400,320);
+    gui.setDefaultCloseOperation(EXIT_ON_CLOSE);
+    gui.setLocationRelativeTo(null);
+    gui.setResizable(false);
   }
 }
 

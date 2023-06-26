@@ -79,6 +79,7 @@ public ArrayList<Integer> Buchstabencheck(String derBuchstabe, String siegwortt)
         String siegWort=siegwortt.toLowerCase();
         String buchstabeS=derBuchstabe.toLowerCase();
 
+        if(buchstabeS.length() == 0) return new ArrayList<>();
         char buchstabeC=buchstabeS.charAt(0);
         ArrayList<Integer> positions =new ArrayList<>();
 
@@ -185,7 +186,6 @@ public void game(Spieler spieler, JLabel label) throws SQLException {
 
 public boolean inheritsChar(JTextField textField){
     ArrayList<String> tempWord=new ArrayList<>();
-    System.out.println("siegword: " + siegwort);
     for(int i = 0; i < siegwort.length(); i++){
         tempWord.add("");
     }

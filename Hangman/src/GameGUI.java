@@ -49,6 +49,7 @@ public class GameGUI extends JFrame implements ActionListener {
 
   public GameGUI() throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException, SQLException {
     printtln("Main GUI is being created");
+    setIconImage(GUI.icon);
     tries = 10;
     hasAdminPermission = false;
     initImagePaths();
@@ -76,7 +77,7 @@ public class GameGUI extends JFrame implements ActionListener {
     // Set up the placeholder text in the label
     StringBuilder placeHolder;
     placeHolder = new StringBuilder();
-    placeHolder.append("_".repeat(Math.max(0, model.getChosenWord().length() - 1)));
+    placeHolder.append("_ ".repeat(Math.max(0, model.getChosenWord().length() - 1)));
     placeHolder.append("_");
     String placeHolderResult = placeHolder.toString();
     searchedWordLabel.setText(placeHolderResult);
@@ -188,7 +189,7 @@ public class GameGUI extends JFrame implements ActionListener {
             if(charList[i] != '_'){
               toSetText.append(model.getSiegwort().charAt(i));
               counter++; }
-            else toSetText.append("_");
+            else toSetText.append("_ ");
           }
           searchedWordLabel.setText(toSetText.toString());
           printtln("The displayed text has been updated");
@@ -411,6 +412,6 @@ public class GameGUI extends JFrame implements ActionListener {
     LocalDateTime localDateTime = LocalDateTime.now();
     DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
     String formattedDate = localDateTime.format(dateTimeFormatter);
-    System.out.println("\u001B[32m" + "DB[" + formattedDate + "] " + defaultText + "\u001B[0m");
+    System.out.println("UI[" + formattedDate + "] " + defaultText);
   }
 }

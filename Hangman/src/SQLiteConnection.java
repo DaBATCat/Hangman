@@ -34,7 +34,7 @@ public class SQLiteConnection {
 
       // executions here
 
-          new SQLiteConnection().printTable(Table.MANAGEMENT);
+          new SQLiteConnection().removeWord("Rindfleischettikettierung");
         }
     catch (SQLException e){
           printtln("Error!");
@@ -587,7 +587,7 @@ public class SQLiteConnection {
     LocalDateTime localDateTime = LocalDateTime.now();
     DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
     String formattedDate = localDateTime.format(dateTimeFormatter);
-    System.out.println("\u001B[34m" +"DB[" + formattedDate + "] " + defaultText+ "\u001B[0m");
+    System.out.println("DB[" + formattedDate + "] " + defaultText);
   }
 
     private static void connect(String url) throws SQLException {

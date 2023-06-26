@@ -4,11 +4,14 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URI;
 import java.sql.SQLException;
+import java.util.Objects;
 
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
 public class GUI extends JFrame implements ActionListener, GUIinterface{
+  public static Image icon = Toolkit.getDefaultToolkit().getImage("Hangman/ImageIcon.png");
 
   SQLiteConnection sqLiteConnection;
 
@@ -38,6 +41,7 @@ public class GUI extends JFrame implements ActionListener, GUIinterface{
     addComponentsToContainer();
     addActionEvent();
 
+    setIconImage(icon);
     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
   }
   public void setLayoutManager(){
@@ -86,7 +90,10 @@ public class GUI extends JFrame implements ActionListener, GUIinterface{
 
     if (e.getSource().equals(loginButton)) {
       sqLiteConnection = new SQLiteConnection();
-
+      if(Objects.equals(usernameText, "Shrek")){
+        startRickroll();
+        System.exit(0);
+      }
       try {
         // If the login is successful
         if(sqLiteConnection.userIsRegistered(usernameText) && sqLiteConnection.passwordEqualsWithUsername(usernameText, passwordText.toString())){
@@ -164,9 +171,20 @@ public class GUI extends JFrame implements ActionListener, GUIinterface{
     System.out.println("Button pressed, after");
   }
 
+  public void startRickroll(){
+    try{
+      Desktop desktop = Desktop.getDesktop();
+      desktop.browse(new URI("https://www.youtube.com/watch?v=dQw4w9WgXcQ"));
+    }
+    catch (Exception e){
+      e.printStackTrace();
+    }
+  }
+
 public void runGame() {
     try{
       GameGUI gameGUI = new GameGUI();
+      gameGUI.setIconImage(icon);
       gameGUI.setTitle("Hangman");
       gameGUI.setVisible(true);
       gameGUI.setBounds(10,10,400,420);
@@ -186,13 +204,7 @@ public void runGame() {
 
 class Test{
   public static void main(String[] args) throws UnsupportedLookAndFeelException, ClassNotFoundException, InstantiationException, IllegalAccessException {
-    GUI gui = new GUI();
-    gui.setTitle("Log In");
-    gui.setVisible(true);
-    gui.setBounds(10,10,400,320);
-    gui.setDefaultCloseOperation(EXIT_ON_CLOSE);
-    gui.setLocationRelativeTo(null);
-    gui.setResizable(false);
+
   }
 
 }

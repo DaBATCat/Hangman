@@ -10,7 +10,7 @@ public class PasswordGUI extends JFrame implements ActionListener {
   JLabel adminPasswordLabel = new JLabel("Admin-Passwort:");
   JPasswordField passwordField = new JPasswordField();
   JButton button = new JButton("Weiter");
-  public static String ADMINPASSWORD = "hugo";
+  public static String ADMINPASSWORD = "pasw";
 
   public void setGameGUI(GameGUI gameGUI) {
     this.gameGUI = gameGUI;
