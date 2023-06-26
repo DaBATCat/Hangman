@@ -8,9 +8,7 @@ import java.net.URI;
 import java.sql.SQLException;
 import java.util.Objects;
 
-import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
-
-public class GUI extends JFrame implements ActionListener, GUIinterface{
+public class GUI extends JFrame implements ActionListener{
   public static Image icon = Toolkit.getDefaultToolkit().getImage("Hangman/ImageIcon.png");
 
   SQLiteConnection sqLiteConnection;
@@ -28,10 +26,6 @@ public class GUI extends JFrame implements ActionListener, GUIinterface{
 
   public static Spieler getSpieler() {
     return spieler;
-  }
-
-  public void setSpieler(Spieler spieler) {
-    this.spieler = spieler;
   }
 
   static Spieler spieler;
@@ -79,7 +73,6 @@ public class GUI extends JFrame implements ActionListener, GUIinterface{
   public void actionPerformed(ActionEvent e) {
     String usernameText;
     StringBuilder passwordText;
-    String passwordTextStr;
     usernameText = usernameTextField.getText();
     char[] passwordTextChars = passwordField.getPassword();
     passwordText = new StringBuilder();
@@ -163,13 +156,6 @@ public class GUI extends JFrame implements ActionListener, GUIinterface{
 
 
     }
-
-
-  // Outdated ActionListener
-  @Override
-  public void onRegistered(ActionListener e){
-    System.out.println("Button pressed, after");
-  }
 
   public void startRickroll(){
     try{

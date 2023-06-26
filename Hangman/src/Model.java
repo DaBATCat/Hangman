@@ -16,7 +16,7 @@ private Spieler player = GUI.getSpieler();
     }
 
     public String siegwort;
-    ArrayList<String> woerter = new ArrayList<String>();
+    ArrayList<String> woerter = new ArrayList<>();
 
 
 
@@ -31,28 +31,13 @@ private Spieler player = GUI.getSpieler();
         woerter= new SQLiteConnection().getWordsFromTable();
     }
 
-    public void setFails(int fails) {
-        this.fails = fails;
-    }
-
     //Wort eingabe Methode
     public String inputWort(JTextField textField){
         return  textField.getText();
     }
 
-//überprüft ob das eingegebene Wort das gesuchte Wort ist
-public boolean WortCheck(String dasWort, String siegwort){
 
-    if (dasWort.equalsIgnoreCase(siegwort)){
-        return true;
-    }
-    else return false;
-
-}
-
-
-
-public void nochmalSpielen() throws SQLException {
+public void nochmalSpielen() {
     Scanner scanner = new Scanner(System.in);
     String input="";
     System.out.println("möchtest du nochmal spielen? (J/N)");
@@ -92,7 +77,6 @@ public ArrayList<Integer> Buchstabencheck(String derBuchstabe, String siegwortt)
             }
         }
         return positions;
-
     }
     else return positions;
 }
@@ -120,117 +104,23 @@ public String getChosenWord(){
     return siegwort;
 }
 
-//spiel
-public void game(Spieler spieler, JLabel label) throws SQLException {
-        player=spieler;
-        setFails(0);
-    Random rand = new Random();
-    int nr=rand.nextInt(woerter.size()-1);
-    ArrayList<String> tempWord=new ArrayList<>();
-
-    //wählt zufälliges wort aus der Liste mit den Beispielwörtern
-    siegwort = woerter.get(nr);
-    // label.setText("Finde das Wort:");
-
-    //füllt das Testwort mit platzhalter Werten
-    for (int i = 0; i < siegwort.length(); i++) {
-        tempWord.add("_");
-
-    }
-    label.setText(tempWord.toString());
-
-
-    while (fails<10){
-        System.out.println("Übrige Versuche: "+(versuche-fails));
-        for (int i = 0; i < tempWord.size(); i++) {
-            if (tempWord.contains("_")){
-            System.out.print(tempWord.get(i)+" ");}
-            else{ Victory(); return;}
-
-        }
-        String inputWort=inputWort(new JTextField());
-        if (inputWort.length()>1){
-
-            if (WortCheck(inputWort,siegwort)){
-                Victory();
-                return;
-            }
-            else {
-                System.out.println("Falsch. Probier es Nochmal!!");
-                fails++;
-            }
-        }
-        else {
-            ArrayList<Integer> buchstabenPos=new ArrayList<>();
-            buchstabenPos=Buchstabencheck(inputWort,siegwort);
-            if (!buchstabenPos.isEmpty()){
-                System.out.println("BUCHSTABE IST DABEI");
-                for (int i = 0; i < buchstabenPos.size(); i++) {
-                    tempWord.set(buchstabenPos.get(i),inputWort);
-
-                }
-
-            }
-            else{
-                System.out.println("DER BUCHSTABE IST ES NICHT!");
-                fails++;
-            }
-
-        }
-
-
-        }
-    fail();
-
-}
-
 public boolean inheritsChar(JTextField textField){
     ArrayList<String> tempWord=new ArrayList<>();
     for(int i = 0; i < siegwort.length(); i++){
         tempWord.add("");
     }
     String inputWort=inputWort(textField);
-
-
     ArrayList<Integer> buchstabenPos = new ArrayList<>();
     buchstabenPos=Buchstabencheck(inputWort,siegwort);
     if (!buchstabenPos.isEmpty()){
         for(int i = 0; i < buchstabenPos.size(); i++){
             tempWord.set(buchstabenPos.get(i), inputWort);
         }
-        // System.out.println("BUCHSTABE IST DABEI");
-        // for (int i = 0; i < buchstabenPos.size(); i++) {
-        //     tempWord.set(buchstabenPos.get(i),inputWort);
-
-        // }
-        // StringBuilder text = new StringBuilder();
-        // for(int i = 0; i < tempWord.size(); i++){
-        //     text.append(tempWord.get(i));
-        // }
-        // gameGUI.setSearchedWordLabel(text.toString());
         return true;
     }
     else{
         fails++;
     }
-
-
     return false;
 }
-
-
-//test Methode
-public void soutWords(){
-    for(int i = 0; i < woerter.size(); i++) {
-        System.out.print(woerter.get(i)+", ");
-    }
-}
-
-//test Methode
-public void length(){
-    System.out.println(woerter.size());
-    System.out.println(woerter.get(woerter.size()-1));
-}
-
-
 }

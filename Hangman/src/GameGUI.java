@@ -1,7 +1,6 @@
 package org.app.utils;
 
 import javax.swing.*;
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -42,7 +41,7 @@ public class GameGUI extends JFrame implements ActionListener {
 
   Spieler spieler;
   private void initImagePaths(){
-    for(int i = 0; i < 10; i++){
+    for(int i = 0; i <= 10; i++){
       imagePaths[i] = "Hangman/Images/Progress" + (i) + ".png";
     }
   }
@@ -317,13 +316,13 @@ public class GameGUI extends JFrame implements ActionListener {
     incrementGamesPlayed();
     try{
       new SQLiteConnection().incrementWins(spieler.getUsername());
-      // sqLiteConnection.incrementWins(spieler.getUsername());
 
     }
   catch (SQLException e){
       e.printStackTrace();
   }
   }
+
   // Appears if the user had the admin password
   public void removeWordPermission(){
     printtln("Remove words Window with admin permission");
