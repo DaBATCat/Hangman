@@ -1,0 +1,15 @@
+<component name="ArtifactManager">
+  <artifact name="Hangman:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Hangman_jar</output-path>
+    <root id="root">
+      <element id="archive" name="Hangman.jar">
+        <element id="directory" name="META-INF">
+          <element id="file-copy" path="$PROJECT_DIR$/Hangman/src/main/resources/META-INF/MANIFEST.MF" />
+        </element>
+        <element id="module-output" name="Hangman" />
+      </element>
+      <element id="library" level="application" name="mysql-connector-j-8.0.33" />
+      <element id="library" level="application" name="sqlite-jdbc-3.42.0.0" />
+    </root>
+  </artifact>
+</component>
